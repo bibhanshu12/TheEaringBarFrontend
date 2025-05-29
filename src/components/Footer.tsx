@@ -96,7 +96,7 @@ const Footer = () => {
                 </p>
                 <p className="mb-3 text-white/80">
                   <span className="block font-medium text-white">Email:</span>
-                  info@goldluxeemporium.com
+                  mail.bibhanshu127@gmail.com
                 </p>
               </address>
             </div>
@@ -105,7 +105,7 @@ const Footer = () => {
         
         {/* Copyright Bar */}
         <div className="py-4 border-t border-white/20 text-center text-sm text-white/70">
-          <p>&copy; {new Date().getFullYear()} Gold Luxe Emporium. All rights reserved.</p>
+          <p>&copy; {new Date().getFullYear()} The EaringBar. All rights reserved.</p>
         </div>
       </div>
     </footer>

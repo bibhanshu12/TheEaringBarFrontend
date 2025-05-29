@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { useAppSelector, useAppDispatch } from '../store/hooks';
@@ -12,30 +11,54 @@ import { Star, ShoppingCart, Heart } from 'lucide-react';
 
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
+import { useGetProductByIdQuery } from '../store/services/productsApi';
 
 const ProductDetail = () => {
   const { id } = useParams<{ id: string }>();
   const dispatch = useAppDispatch();
-  const { items: products } = useAppSelector((state) => state.products);
   const [quantity, setQuantity] = useState(1);
   const [thumbsSwiper, setThumbsSwiper] = useState<any>(null);
-  
-  const product = products.find(p => p.id === id);
-  
-  if (!product) {
+
+  const { 
+    data: productData, 
+    isLoading, 
+    error 
+  } = useGetProductByIdQuery(id || '');
+
+  if (isLoading) {
     return (
       <div className="min-h-screen flex flex-col">
         <Navbar />
         <main className="flex-grow pt-24 px-4">
-          <div className="container mx-auto text-center py-16">
-            <h2 className="text-2xl font-semibold">Product not found</h2>
+          <div className="container mx-auto">
+            <div className="animate-pulse">
+              {/* Add loading skeleton here */}
+            </div>
           </div>
         </main>
         <Footer />
       </div>
     );
   }
-  
+
+  if (error || !productData?.data) {
+    return (
+      <div className="min-h-screen flex flex-col">
+        <Navbar />
+        <main className="flex-grow pt-24 px-4">
+          <div className="container mx-auto text-center py-16">
+            <h2 className="text-2xl font-semibold text-red-500">
+              Product not found
+            </h2>
+          </div>
+        </main>
+        <Footer />
+      </div>
+    );
+  }
+
+  const product = productData.data;
+
   const handleAddToCart = () => {
     dispatch(addToCart({
       id: product.id,
@@ -63,7 +86,7 @@ const ProductDetail = () => {
                 {product.images.map((image, index) => (
                   <SwiperSlide key={index}>
                     <img 
-                      src={image} 
+                      src={image.imageUrl} 
                       alt={`${product.name} - Image ${index + 1}`}
                       className="w-full h-96 object-cover"
                     />
@@ -84,7 +107,7 @@ const ProductDetail = () => {
                   <SwiperSlide key={index}>
                     <div className="cursor-pointer rounded-md overflow-hidden">
                       <img 
-                        src={image} 
+                        src={image.imageUrl} 
                         alt={`Thumbnail ${index + 1}`}
                         className="w-full h-24 object-cover"
                       />
@@ -104,7 +127,7 @@ const ProductDetail = () => {
               
               <h1 className="text-3xl font-bold text-gold-antique mb-2">{product.name}</h1>
               
-              <div className="flex items-center mb-4">
+              {/* <div className="flex items-center mb-4">
                 {product.rating && (
                   <>
                     <div className="flex">
@@ -119,7 +142,7 @@ const ProductDetail = () => {
                     <span className="ml-2 text-sm text-gold-antique/70">({product.rating})</span>
                   </>
                 )}
-              </div>
+              </div> */}
               
               <div className="text-2xl font-bold text-gold-bronze mb-6">
                 ${product.price.toLocaleString()}

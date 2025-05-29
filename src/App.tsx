@@ -1,4 +1,3 @@
-
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -12,6 +11,10 @@ import ProductDetail from "./pages/ProductDetail";
 import CategoryPage from "./pages/CategoryPage";
 import CartPage from "./pages/CartPage";
 import NotFound from "./pages/NotFound";
+import About from "./pages/About";
+import AllProducts from "./store/features/AllProducts";
+import ProductsPage from "./pages/ProductsPage";
+
 
 const queryClient = new QueryClient();
 
@@ -24,9 +27,12 @@ const App = () => (
         <BrowserRouter>
           <Routes>
             <Route path="/" element={<Index />} />
+            <Route path="/products" element={<ProductsPage />} />
             <Route path="/product/:id" element={<ProductDetail />} />
-            <Route path="/category/:categoryName" element={<CategoryPage />} />
+            <Route path="/category/:categoryId" element={<CategoryPage />} />
             <Route path="/cart" element={<CartPage />} />
+            <Route path="/about" element={<About/>} />
+            <Route path="/products" element={<AllProducts/>} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>

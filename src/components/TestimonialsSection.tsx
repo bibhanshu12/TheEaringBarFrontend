@@ -9,7 +9,7 @@ import { Star } from 'lucide-react';
 const testimonials = [
   {
     id: 1,
-    name: 'Sarah Johnson',
+    name: 'Anjali Karn',
     testimonial: 'The quality of the diamond ring I purchased exceeded all my expectations. The craftsmanship is superb and the customer service was exceptional.',
     rating: 5,
     image: '/images/testimonial-1.jpg',
@@ -17,7 +17,7 @@ const testimonials = [
   },
   {
     id: 2,
-    name: 'Michael Chen',
+    name: 'Rahul Karn',
     testimonial: "I bought a necklace for my wife's anniversary and she absolutely loved it. The packaging was elegant and the delivery was surprisingly fast.",
     rating: 5,
     image: '/images/testimonial-2.jpg',
@@ -25,7 +25,7 @@ const testimonials = [
   },
   {
     id: 3,
-    name: 'Emma Wilson',
+    name: 'Pryanshi Karn',
     testimonial: 'Gold Luxe Emporium has become my go-to jewelry store. Their designs are unique and the prices are reasonable for the quality you receive.',
     rating: 4,
     image: '/images/testimonial-3.jpg',
