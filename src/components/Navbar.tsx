@@ -32,7 +32,7 @@ const Navbar = () => {
         {/* Top Bar */}
         <div className="flex items-center justify-between mb-4">
           {/* Left - Search Icon */}
-          <div className="flex-1 flex justify-start">
+          <div className="flex-1 flex pt-9 justify-start">
             <button 
               onClick={() => setIsSearchOpen(!isSearchOpen)}
               className="text-gold-antique hover:text-gold-bronze transition-colors"
@@ -42,7 +42,7 @@ const Navbar = () => {
           </div>
 
           {/* Center - Logo */}
-          <div className="flex-1 flex justify-center">
+          <div className="flex-2 flex justify-center">
             <Link to="/" className="flex items-center">
               <h1 className="text-2xl font-bold gold-gradient-text">THE EARING BAR</h1>
             </Link>
@@ -50,8 +50,8 @@ const Navbar = () => {
 
           {/* Right - Cart */}
           <div className="flex-1 flex justify-end">
-            <Link to="/cart" className="text-gold-antique hover:text-gold-bronze transition-colors relative">
-              <ShoppingCart size={20} />
+            <Link to="/cart" className="text-gold-antique  hover:text-gold-bronze transition-colors relative">
+              <ShoppingCart size={30} />
               {totalItems > 0 && (
                 <span className="absolute -top-2 -right-2 bg-gold-standard text-black text-xs w-5 h-5 rounded-full flex items-center justify-center font-bold">
                   {totalItems}
@@ -127,33 +127,57 @@ const Navbar = () => {
         
         {/* Mobile Menu Overlay */}
         {isMobileMenuOpen && (
-          <div className="md:hidden fixed inset-0 z-50 bg-white animate-fade-in">
+          <div className="md:hidden fixed inset-0 z-50 bg-white animate-fade-in overflow-y-auto">
             <div className="container-custom py-6">
+              {/* Mobile Header */}
               <div className="flex justify-between items-center mb-8">
-                <h1 className="text-2xl font-bold gold-gradient-text">GOLD LUXE EMPORIUM</h1>
+                <Link to="/" onClick={() => setIsMobileMenuOpen(false)}>
+                  <h1 className="text-2xl font-bold gold-gradient-text">THE EARING BAR</h1>
+                </Link>
                 <button 
                   onClick={() => setIsMobileMenuOpen(false)}
-                  className="text-gold-antique"
+                  className="text-gold-antique hover:text-gold-bronze"
                 >
                   <X size={24} />
                 </button>
               </div>
-              <nav className="flex flex-col space-y-6">
-                <Link to="/" className="text-xl text-gold-antique hover:text-gold-bronze font-medium" onClick={() => setIsMobileMenuOpen(false)}>
+
+              {/* Mobile Search */}
+              <div className="mb-6">
+                <div className="relative">
+                  <input 
+                    type="text" 
+                    placeholder="Search for jewelry..." 
+                    className="w-full p-3 border border-gold-antique/20 rounded-md focus:outline-none focus:ring-1 focus:ring-gold-bronze bg-gray-50"
+                  />
+                  <Search className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gold-antique" size={20} />
+                </div>
+              </div>
+
+              {/* Mobile Navigation */}
+              <nav className="flex flex-col">
+                <Link 
+                  to="/" 
+                  className="py-3 border-b border-gold-antique/10 text-gold-antique hover:text-gold-bronze"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                >
                   Home
                 </Link>
-                
-                {/* Dynamic Categories in Mobile Menu */}
-                <div>
-                  <h3 className="text-xl text-gold-antique mb-2 font-medium">Categories</h3>
-                  <div className="pl-4 flex flex-col space-y-2">
+
+                {/* Categories Section */}
+                <div className="py-3 border-b border-gold-antique/10">
+                  <div className="flex items-center justify-between text-gold-antique mb-2">
+                    <span>Categories</span>
+                    <ChevronDown size={16} />
+                  </div>
+                  <div className="pl-4 space-y-2 mt-2">
                     {isCategoriesLoading ? (
-                      <div className="text-gray-500">Loading...</div>
+                      <div className="text-sm text-gray-500">Loading...</div>
                     ) : categoriesData?.data?.map((category) => (
                       <Link
                         key={category.id}
                         to={`/category/${category.id}`}
-                        className="text-gold-antique hover:text-gold-bronze transition-colors"
+                        className="block py-2 text-gold-antique/80 hover:text-gold-bronze"
                         onClick={() => setIsMobileMenuOpen(false)}
                       >
                         {category.name}
@@ -162,9 +186,52 @@ const Navbar = () => {
                   </div>
                 </div>
 
-                <Link to="/collections" className="text-xl text-gold-antique hover:text-gold-bronze font-medium" onClick={() => setIsMobileMenuOpen(false)}>Collections</Link>
-                <Link to="/about" className="text-xl text-gold-antique hover:text-gold-bronze font-medium" onClick={() => setIsMobileMenuOpen(false)}>About</Link>
-                <Link to="/contact" className="text-xl text-gold-antique hover:text-gold-bronze font-medium" onClick={() => setIsMobileMenuOpen(false)}>Contact</Link>
+                {/* Main Navigation Items */}
+                <Link 
+                  to="/products" 
+                  className="py-3 border-b border-gold-antique/10 text-gold-antique hover:text-gold-bronze"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                >
+                  All Jewellery
+                </Link>
+                <Link 
+                  to="/fresh-drops" 
+                  className="py-3 border-b border-gold-antique/10 text-gold-antique hover:text-gold-bronze"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                >
+                  Fresh Drops
+                </Link>
+                <Link 
+                  to="/gift-boxes" 
+                  className="py-3 border-b border-gold-antique/10 text-gold-antique hover:text-gold-bronze"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                >
+                  Gift Boxes
+                </Link>
+                <Link 
+                  to="/couple-sets" 
+                  className="py-3 border-b border-gold-antique/10 text-gold-antique hover:text-gold-bronze"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                >
+                  Couple Sets
+                </Link>
+
+                {/* Cart Link for Mobile */}
+                <Link 
+                  to="/cart" 
+                  className="mt-4 flex items-center justify-between py-3 px-4 bg-gold-light rounded-md text-gold-antique hover:bg-gold-light/80"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                >
+                  <span className="flex items-center">
+                    <ShoppingCart size={20} className="mr-2" />
+                    Cart
+                  </span>
+                  {totalItems > 0 && (
+                    <span className="bg-gold-standard text-black text-xs px-2 py-1 rounded-full">
+                      {totalItems}
+                    </span>
+                  )}
+                </Link>
               </nav>
             </div>
           </div>

@@ -21,7 +21,7 @@ export const colorsApi = createApi({
       search?: string;
     }>({
       query: (params = { page: 1, limit: 10 }) => ({
-        url: '/category/getcolors',
+        url: '/api/category/getcolors',
         params,
       }),
       providesTags: (result) =>
@@ -34,18 +34,18 @@ export const colorsApi = createApi({
     }),
 
     getAllColors: builder.query<ApiResponse<Color[]>, void>({
-      query: () => '/category/getcolors',
+      query: () => '/api/category/getcolors',
       providesTags: [{ type: 'Colors', id: 'LIST' }],
     }),
 
     getColorById: builder.query<ApiResponse<Color>, string>({
-      query: (id) => `/category/colors/${id}`,
+      query: (id) => `/api/category/colors/${id}`,
       providesTags: (result, error, id) => [{ type: 'Colors', id }],
     }),
 
     createColor: builder.mutation<ApiResponse<Color>, ColorFormData>({
       query: (color) => ({
-        url: '/category/addcolor',
+        url: '/api/category/addcolor',
         method: 'POST',
         body: color,
       }),
@@ -54,7 +54,7 @@ export const colorsApi = createApi({
 
     updateColor: builder.mutation<ApiResponse<Color>, { id: string; data: ColorFormData }>({
       query: ({ id, data }) => ({
-        url: `/category/colors/${id}`,
+        url: `/api/category/colors/${id}`,
         method: 'PUT',
         body: data,
       }),
@@ -66,7 +66,7 @@ export const colorsApi = createApi({
 
     deleteColor: builder.mutation<ApiResponse<void>, string>({
       query: (id) => ({
-        url: `/category/colors/${id}`,
+        url: `/api/category/colors/${id}`,
         method: 'DELETE',
       }),
       invalidatesTags: [{ type: 'Colors', id: 'LIST' }],

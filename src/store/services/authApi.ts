@@ -2,7 +2,7 @@
 import { createApi } from '@reduxjs/toolkit/query/react';
 import { baseQueryWithReauth } from './baseQuery';
 import { setCredentials, logout as logoutAction } from '../authSlice';
-import { LoginResponse } from '../../models/types';
+import { LoginResponse } from '../../models/type';
 export const authApi = createApi({
   reducerPath: 'authApi',
   baseQuery: baseQueryWithReauth,

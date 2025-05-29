@@ -8,22 +8,77 @@ import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/thumbs';
 import { Star, ShoppingCart, Heart } from 'lucide-react';
+import { toast } from 'react-toastify';
 
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import { useGetProductByIdQuery } from '../store/services/productsApi';
+import { useGetColorByIdQuery } from '../store/services/colorsApi';
+
+interface Color {
+  id: string;
+  productId: string;
+  colorId: string;
+  stock: number;
+  createdAt: string;
+  updatedAt: string;
+}
+
+const ColorButton: React.FC<{
+  colorId: string;
+  isSelected: boolean;
+  onSelect: () => void;
+  stock: number;
+}> = ({ colorId, isSelected, onSelect, stock }) => {
+  const { data: colorData, isLoading } = useGetColorByIdQuery(colorId);
+
+  if (isLoading) {
+    return (
+      <div className="w-8 h-8 rounded-full bg-gray-200 animate-pulse" />
+    );
+  }
+
+  const color = colorData?.data;
+
+  return (
+    <div className="flex flex-col items-center gap-1">
+      <button
+        onClick={onSelect}
+        className={`
+          w-8 h-8 rounded-full border-2 transition-all duration-200
+          ${isSelected ? 'border-gold-antique scale-110' : 'border-transparent scale-100'}
+        `}
+        style={{
+          backgroundColor: color?.hexCode || '#000000',
+          boxShadow: isSelected ? '0 0 0 2px rgba(255, 255, 255, 0.9)' : 'none'
+        }}
+        title={color?.name}
+      >
+        <span className="sr-only">Select {color?.name}</span>
+      </button>
+      {isSelected && (
+        <span className="text-xs text-gold-antique/70">
+          {color?.name}
+        </span>
+      )}
+    </div>
+  );
+};
 
 const ProductDetail = () => {
   const { id } = useParams<{ id: string }>();
   const dispatch = useAppDispatch();
   const [quantity, setQuantity] = useState(1);
   const [thumbsSwiper, setThumbsSwiper] = useState<any>(null);
+  const [selectedColor, setSelectedColor] = useState<Color | null>(null);
 
   const { 
     data: productData, 
     isLoading, 
     error 
   } = useGetProductByIdQuery(id || '');
+
+  console.log(productData?.data);
 
   if (isLoading) {
     return (
@@ -60,13 +115,27 @@ const ProductDetail = () => {
   const product = productData.data;
 
   const handleAddToCart = () => {
+    if (!selectedColor && product.stock < quantity) {
+      toast.error("Not enough stock available!");
+      return;
+    }
+    
+    if (selectedColor && selectedColor.stock < quantity) {
+      toast.error(`Not enough stock available for selected color!`);
+      return;
+    }
+
     dispatch(addToCart({
       id: product.id,
       name: product.name,
       price: product.price,
       image: product.images[0],
-      quantity
+      quantity,
+      colorId: selectedColor?.colorId,
+      availableStock: selectedColor ? selectedColor.stock : product.stock
     }));
+    
+    toast.success("Added to cart successfully!");
   };
   
   return (
@@ -181,13 +250,61 @@ const ProductDetail = () => {
                 </div>
               </div>
               
+              {/* Color Selection */}
+              {product.colors && product.colors.length > 0 && (
+                <div className="mb-6">
+                  <label className="block text-sm font-medium text-gold-antique mb-2">
+                    Available Colors
+                  </label>
+                  <div className="flex gap-4">
+                    {product.colors.map((colorOption) => (
+                      <ColorButton
+                        key={colorOption.id}
+                        colorId={colorOption.colorId}
+                        isSelected={selectedColor?.id === colorOption.id}
+                        onSelect={() => setSelectedColor(colorOption)}
+                        stock={colorOption.stock}
+                      />
+                    ))}
+                  </div>
+                  {selectedColor && (
+                    <p className="mt-2 text-sm text-gold-antique/70">
+                      Available Stock: {selectedColor.stock}
+                    </p>
+                  )}
+                </div>
+              )}
+
+              {/* Stock Information */}
+              <div className="mb-4">
+                <p className="text-sm text-gold-antique/70">
+                  {selectedColor 
+                    ? `Stock available for selected color: ${selectedColor.stock}`
+                    : `Total stock available: ${product.stock}`
+                  }
+                </p>
+              </div>
+              
               <div className="flex gap-4 mb-8">
                 <button 
                   onClick={handleAddToCart}
-                  className="btn-primary flex items-center"
+                  disabled={
+                    (selectedColor && selectedColor.stock < quantity) || 
+                    (!selectedColor && product.stock < quantity)
+                  }
+                  className={`btn-primary flex items-center ${
+                    (selectedColor && selectedColor.stock < quantity) || 
+                    (!selectedColor && product.stock < quantity)
+                      ? 'opacity-50 cursor-not-allowed'
+                      : ''
+                  }`}
                 >
                   <ShoppingCart size={18} className="mr-2" />
-                  Add to Cart
+                  {(selectedColor && selectedColor.stock < quantity) || 
+                   (!selectedColor && product.stock < quantity)
+                    ? 'Out of Stock'
+                    : 'Add to Cart'
+                  }
                 </button>
                 <button className="btn-secondary flex items-center">
                   <Heart size={18} className="mr-2" />
