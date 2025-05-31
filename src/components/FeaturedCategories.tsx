@@ -109,7 +109,7 @@ const FeaturedCategories: React.FC<FeaturedCategoriesProps> = ({
           </Swiper>
         </div>
 
-        {/* Mobile Swiper */}
+        {/* Mobile Swiper - Updated to use products prop */}
         <div className="md:hidden">
           <Swiper
             modules={[Navigation, Pagination]}
@@ -121,7 +121,7 @@ const FeaturedCategories: React.FC<FeaturedCategoriesProps> = ({
             loop={true}
             className="pb-10"
           >
-            {featuredItems.map((product) => (
+            {products?.map((product) => ( // Changed from featuredItems to products
               <SwiperSlide key={product.id}>
                 <ProductCard product={product} />
               </SwiperSlide>

@@ -10,7 +10,7 @@ const Footer = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
             {/* About */}
             <div>
-              <h3 className="text-xl font-semibold mb-4">Gold Luxe Emporium</h3>
+              <h3 className="text-xl font-semibold mb-4">The EaringBar</h3>
               <p className="text-white/80 mb-4">
                 Exquisite jewelry crafted with passion and precision. Each piece tells a story of elegance and luxury.
               </p>
@@ -44,7 +44,7 @@ const Footer = () => {
                   <Link to="/" className="text-white/80 hover:text-white transition-colors">Home</Link>
                 </li>
                 <li>
-                  <Link to="/collections" className="text-white/80 hover:text-white transition-colors">Collections</Link>
+                  <Link to="/products" className="text-white/80 hover:text-white transition-colors">Collections</Link>
                 </li>
                 <li>
                   <Link to="/about" className="text-white/80 hover:text-white transition-colors">About Us</Link>
@@ -92,7 +92,7 @@ const Footer = () => {
                 </p>
                 <p className="mb-3 text-white/80">
                   <span className="block font-medium text-white">Phone:</span>
-                  +1 (555) 123-4567
+                  +91 8431615618
                 </p>
                 <p className="mb-3 text-white/80">
                   <span className="block font-medium text-white">Email:</span>
@@ -105,7 +105,7 @@ const Footer = () => {
         
         {/* Copyright Bar */}
         <div className="py-4 border-t border-white/20 text-center text-sm text-white/70">
-          <p>&copy; {new Date().getFullYear()} The EaringBar. All rights reserved.</p>
+          <p>&copy; {new Date().getFullYear()} The EaringBar by Mithila Things. All rights reserved.</p>
         </div>
       </div>
     </footer>

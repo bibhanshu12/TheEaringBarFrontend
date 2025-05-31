@@ -3,7 +3,7 @@ import Footer from '../components/Footer';
 
 const About = () => {
     return (
-        <div className='min-h-screen flex flex-col'>
+        <div className='min-h-screen mt-7 flex flex-col'>
             <Navbar />
             
             <div className="flex-grow container mx-auto px-4  py-20">

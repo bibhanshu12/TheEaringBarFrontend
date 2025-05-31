@@ -135,6 +135,22 @@ export const productsApi = createApi({
     { type: 'Products', id: 'LIST' }
   ],
 }),
+    getProductsByIds: builder.query<ApiResponse<Product[]>, string[]>({
+      query: (ids) => ({
+        url: '/api/products/batch',
+        method: 'POST',
+        body: { ids }
+      }),
+      // Or if you prefer GET method:
+      // query: (ids) => `/api/products/batch?ids=${ids.join(',')}`,
+      providesTags: (result) =>
+        result
+          ? [
+              ...result.data.map(({ id }) => ({ type: 'Products' as const, id })),
+              { type: 'Products', id: 'LIST' },
+            ]
+          : [{ type: 'Products', id: 'LIST' }],
+    }),
   }),
 });
 
@@ -147,4 +163,5 @@ export const {
   useGetProductColorsByIdQuery,
   useUpdateProductColorsMutation ,
   useAssignOfferToProductMutation,
+  useGetProductsByIdsQuery,
 } = productsApi;

@@ -1,19 +1,22 @@
 import React, { useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { useAppSelector, useAppDispatch } from '../store/hooks';
-import { addToCart } from '../store/features/cartSlice';
+import { toast } from 'sonner';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Navigation, Thumbs } from 'swiper/modules';
 import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/thumbs';
 import { Star, ShoppingCart, Heart } from 'lucide-react';
-import { toast } from 'react-toastify';
 
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
+import AuthModal from '../components/AuthModal';
 import { useGetProductByIdQuery } from '../store/services/productsApi';
 import { useGetColorByIdQuery } from '../store/services/colorsApi';
+import { selectIsAuthenticated } from '../store/authSlice';
+import { useAddToCartMutation } from '../store/services/cartApi';
+import { useGetCartQuery } from '../store/services/cartApi';
 
 interface Color {
   id: string;
@@ -68,9 +71,13 @@ const ColorButton: React.FC<{
 const ProductDetail = () => {
   const { id } = useParams<{ id: string }>();
   const dispatch = useAppDispatch();
+  const isAuthenticated = useAppSelector(selectIsAuthenticated);
   const [quantity, setQuantity] = useState(1);
   const [thumbsSwiper, setThumbsSwiper] = useState<any>(null);
   const [selectedColor, setSelectedColor] = useState<Color | null>(null);
+  const [showAuthModal, setShowAuthModal] = useState(false);
+  const [addToCartMutation] = useAddToCartMutation();
+  const { data: cartData, refetch: refetchCart } = useGetCartQuery();
 
   const { 
     data: productData, 
@@ -78,7 +85,49 @@ const ProductDetail = () => {
     error 
   } = useGetProductByIdQuery(id || '');
 
-  console.log(productData?.data);
+  const handleAddToCart = async () => {
+    if (!isAuthenticated) {
+      setShowAuthModal(true);
+      return;
+    }
+
+    if (!product) {
+      toast.error("Product not found!");
+      return;
+    }
+
+    if (!selectedColor && product.stock < quantity) {
+      toast.error("Not enough stock available!");
+      return;
+    }
+
+    try {
+      const cartItem = {
+        productId: product.id,
+        colorId: selectedColor?.colorId,
+        quantity: quantity
+      };
+
+      const response = await addToCartMutation(cartItem).unwrap();
+
+      if (response.status === 200) {
+        toast.success("Added to cart successfully!");
+        refetchCart(); // Refresh cart data
+      }
+    } catch (error: any) {
+      if (error.status === 401) {
+        setShowAuthModal(true);
+      } else {
+        toast.error(error.data?.message || "Failed to add item to cart");
+      }
+      console.error('Add to cart error:', error);
+    }
+  };
+
+  const handleAuthSuccess = () => {
+    setShowAuthModal(false);
+    handleAddToCart();
+  };
 
   if (isLoading) {
     return (
@@ -114,30 +163,6 @@ const ProductDetail = () => {
 
   const product = productData.data;
 
-  const handleAddToCart = () => {
-    if (!selectedColor && product.stock < quantity) {
-      toast.error("Not enough stock available!");
-      return;
-    }
-    
-    if (selectedColor && selectedColor.stock < quantity) {
-      toast.error(`Not enough stock available for selected color!`);
-      return;
-    }
-
-    dispatch(addToCart({
-      id: product.id,
-      name: product.name,
-      price: product.price,
-      image: product.images[0],
-      quantity,
-      colorId: selectedColor?.colorId,
-      availableStock: selectedColor ? selectedColor.stock : product.stock
-    }));
-    
-    toast.success("Added to cart successfully!");
-  };
-  
   return (
     <div className="min-h-screen flex flex-col">
       <Navbar />
@@ -337,6 +362,15 @@ const ProductDetail = () => {
         </div>
       </main>
       <Footer />
+      
+      {/* Move AuthModal outside the main content */}
+      {showAuthModal && (
+        <AuthModal 
+          isOpen={showAuthModal}
+          onClose={() => setShowAuthModal(false)}
+          onSuccess={handleAuthSuccess}
+        />
+      )}
     </div>
   );
 };

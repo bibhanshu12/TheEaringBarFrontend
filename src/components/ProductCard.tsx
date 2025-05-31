@@ -80,7 +80,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
         
         <div className="flex justify-between items-center mb-3">
           <span className="text-xl text-gold-bronze">
-            NPR.<span className="font-bold">{product.price.toLocaleString()}</span>
+            रू.<span className="font-bold">{product.price.toLocaleString()}</span>
           </span>
           
           {product.rating && (

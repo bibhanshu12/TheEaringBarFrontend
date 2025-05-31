@@ -1,35 +1,36 @@
 import { configureStore } from '@reduxjs/toolkit';
-import { setupListeners } from '@reduxjs/toolkit/query';
+import { TypedUseSelectorHook, useDispatch, useSelector } from 'react-redux';
+import cartReducer from './features/cartSlice';
 import authReducer from './authSlice';
 import { authApi } from './services/authApi';
-import { productsApi } from './services/productsApi';
 import { categoriesApi } from './services/categoriesApi';
+import { productsApi } from './services/productsApi';
+import { cartApi } from './services/cartApi';
 import { colorsApi } from './services/colorsApi';
-import { offersApi } from './services/offersApi';
 
-const store = configureStore({
+export const store = configureStore({
   reducer: {
     auth: authReducer,
+    cart: cartReducer,
     [authApi.reducerPath]: authApi.reducer,
-    [productsApi.reducerPath]: productsApi.reducer,
     [categoriesApi.reducerPath]: categoriesApi.reducer,
+    [productsApi.reducerPath]: productsApi.reducer,
+    [cartApi.reducerPath]: cartApi.reducer,
     [colorsApi.reducerPath]: colorsApi.reducer,
-    [offersApi.reducerPath]: offersApi.reducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().concat(
       authApi.middleware,
-      productsApi.middleware,
       categoriesApi.middleware,
+      productsApi.middleware,
+      cartApi.middleware,
       colorsApi.middleware,
-      offersApi.middleware,
     ),
 });
 
-// optional, but required for refetchOnFocus/refetchOnReconnect behaviors
-setupListeners(store.dispatch);
-
+// Export hooks
 export type RootState = ReturnType<typeof store.getState>;
 export type AppDispatch = typeof store.dispatch;
 
-export { store };
+export const useAppDispatch = () => useDispatch<AppDispatch>();
+export const useAppSelector: TypedUseSelectorHook<RootState> = useSelector;

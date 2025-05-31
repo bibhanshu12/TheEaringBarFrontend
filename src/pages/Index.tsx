@@ -17,6 +17,11 @@ const Index = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
+  // Scroll to top on component mount
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
   // Fetch products for different categories
   const { 
     data: latestProducts, 
@@ -45,30 +50,38 @@ const Index = () => {
     <div className="min-h-screen flex flex-col">
       <Navbar />
       <main className="flex-grow">
-        <HeroSlider />
-        <CategorySection />
-        {/* <FeaturedProducts /> */}
-        
-        {/* Latest Products Section */}
-        <FeaturedCategories
-          title="Latest Collections"
-          subtitle="Explore our newest arrivals"
-          products={latestProducts?.data || []}
-          isLoading={isLatestLoading}
-          error={latestError?.message}
-        />
+        {/* Hero Section */}
+        <section className="relative">
+          <HeroSlider />
+        </section>
 
-        {/* Favourite Products Section */}
-        <FeaturedCategories
-          title="Customer Favourites"
-          subtitle="Our most loved pieces"
-          products={favouriteProducts?.data || []}
-          isLoading={isFavouriteLoading}
-          error={favouriteError?.message}
-        />
+        {/* Content Sections with proper spacing */}
+        <div className="mt-16 space-y-16"> {/* Start content after hero */}
+          <CategorySection />
+          
+          <div className="pt-8">
+            <FeaturedCategories
+              title="Latest Collections"
+              subtitle="Explore our newest arrivals"
+              products={latestProducts?.data || []}
+              isLoading={isLatestLoading}
+              error={latestError?.message}
+            />
+          </div>
 
-        <TestimonialsSection />
-        <NewsletterSection />
+          <div className="pt-4">
+            <FeaturedCategories
+              title="Customer Favourites"
+              subtitle="Our most loved pieces"
+              products={favouriteProducts?.data || []}
+              isLoading={isFavouriteLoading}
+              error={favouriteError?.message}
+            />
+          </div>
+
+          <TestimonialsSection />
+          <NewsletterSection />
+        </div>
       </main>
       <Footer />
     </div>

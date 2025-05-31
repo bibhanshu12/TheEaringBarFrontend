@@ -113,3 +113,15 @@
     @apply border-2 border-gold-antique text-gold-antique hover:bg-gold-antique hover:text-white py-2 px-6 rounded-md transition-all duration-300;
   }
 }
+
+
+
+.swiper-pagination {
+  display: none !important;
+}
+
+
+.swiper-button-next,
+.swiper-button-prev {
+  display: none !important;
+}

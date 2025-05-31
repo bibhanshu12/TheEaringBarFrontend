@@ -29,7 +29,7 @@ const ProductCard = ({ product }) => {
           
           <div className="flex items-center justify-between">
             <span className="text-xl font-bold text-gold-antique">
-              ₹{formatPrice(product.price)}
+              रू{formatPrice(product.price)}
             </span>
             
             <div className="flex gap-1">

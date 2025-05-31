@@ -3,21 +3,22 @@ import { baseQueryWithReauth } from "./baseQuery";
 
 interface CartItem {
   id: string;
+  cartId: string;
   productId: string;
+  colorId: string | null;
   quantity: number;
-  price: number;
-  name: string;
-  imageUrl: string;
+  createdAt: string;
+  updatedAt: string;
 }
 
 interface CartResponse {
-  status: number;
-  message: string;
-  data: CartItem[];
+  status: string;
+  getCartItems: CartItem[];
 }
 
-interface AddToCartRequest {
+export interface AddToCartRequest {
   productId: string;
+  colorId?: string;
   quantity: number;
 }
 
@@ -53,24 +54,24 @@ export const cartApi = createApi({
         body,
       }),
       invalidatesTags: ['Cart'],
+      async onQueryStarted(_, { dispatch, queryFulfilled }) {
+        try {
+          const { data } = await queryFulfilled;
+          if (data.status === 'success') {
+            toast.success('Item added to cart successfully');
+          }
+        } catch (error) {
+          toast.error('Failed to add item to cart');
+        }
+      },
     }),
 
     // Delete item from cart
-    deleteCartItem: builder.mutation<CartResponse, DeleteCartItemRequest>({
-      query: (body) => ({
+    deleteCartItem: builder.mutation<CartResponse, string>({
+      query: (cartItemId) => ({
         url: '/api/deletecartitem',
         method: 'DELETE',
-        body,
-      }),
-      invalidatesTags: ['Cart'],
-    }),
-
-    // Update cart item
-    updateCart: builder.mutation<CartResponse, UpdateCartRequest>({
-      query: (body) => ({
-        url: '/api/updatecart',
-        method: 'PUT',
-        body,
+        body: { cartItemId },
       }),
       invalidatesTags: ['Cart'],
     }),
@@ -82,5 +83,4 @@ export const {
   useGetCartQuery,
   useAddToCartMutation,
   useDeleteCartItemMutation,
-  useUpdateCartMutation,
 } = cartApi;

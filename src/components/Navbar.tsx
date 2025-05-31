@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useAppSelector } from '../store/hooks';
-import { ShoppingCart, ChevronDown, Menu, X, Search } from 'lucide-react';
+import { ShoppingCart, ChevronDown, Menu, X, Search, Package } from 'lucide-react';
 import { useGetAllCategoriesQuery } from '../store/services/categoriesApi';
+import { useGetCartQuery } from '../store/services/cartApi';
 
 const Navbar = () => {
-  const { totalItems } = useAppSelector((state) => state.cart);
+  const { data: cartData } = useGetCartQuery();
+  const cartItemsCount = cartData?.getCartItems?.length || 0;
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
@@ -27,17 +29,17 @@ const Navbar = () => {
   }, []);
 
   return (
-    <header className={`fixed top-0 left-0 w-full z-40 transition-all duration-300 ${isScrolled ? 'bg-white shadow-md py-2' : 'bg-transparent py-4'}`}>
+    <header className={`fixed top-0 left-0 w-full z-40 transition-all duration-300 ${isScrolled ? 'bg-white shadow-md py-2' : 'bg-transparent  '}`}>
       <div className="container-custom">
         {/* Top Bar */}
         <div className="flex items-center justify-between mb-4">
           {/* Left - Search Icon */}
-          <div className="flex-1 flex pt-9 justify-start">
+          <div className="flex-1 flex pt-5 justify-start">
             <button 
               onClick={() => setIsSearchOpen(!isSearchOpen)}
               className="text-gold-antique hover:text-gold-bronze transition-colors"
             >
-              <Search size={20} />
+              <Search size={30} />
             </button>
           </div>
 
@@ -48,13 +50,19 @@ const Navbar = () => {
             </Link>
           </div>
 
-          {/* Right - Cart */}
-          <div className="flex-1 flex justify-end">
-            <Link to="/cart" className="text-gold-antique  hover:text-gold-bronze transition-colors relative">
-              <ShoppingCart size={30} />
-              {totalItems > 0 && (
+          {/* Right - Cart and Orders */}
+          <div className="flex-1 flex justify-end items-center space-x-4">
+            <Link 
+              to="/orders" 
+              className="text-gold-antique hover:text-gold-bronze transition-colors"
+            >
+              <Package size={24} />
+            </Link>
+            <Link to="/cart" className="text-gold-antique hover:text-gold-bronze transition-colors relative">
+              <ShoppingCart size={24} />
+              {cartItemsCount > 0 && (
                 <span className="absolute -top-2 -right-2 bg-gold-standard text-black text-xs w-5 h-5 rounded-full flex items-center justify-center font-bold">
-                  {totalItems}
+                  {cartItemsCount}
                 </span>
               )}
             </Link>
@@ -226,9 +234,9 @@ const Navbar = () => {
                     <ShoppingCart size={20} className="mr-2" />
                     Cart
                   </span>
-                  {totalItems > 0 && (
+                  {cartItemsCount > 0 && (
                     <span className="bg-gold-standard text-black text-xs px-2 py-1 rounded-full">
-                      {totalItems}
+                      {cartItemsCount}
                     </span>
                   )}
                 </Link>
