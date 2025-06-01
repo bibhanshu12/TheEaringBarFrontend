@@ -17,6 +17,7 @@ import ProductsPage from "./pages/ProductsPage";
 import { useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import OrdersPage from "./pages/OrderPage";
+import SearchPage from "./pages/SearchPage";
 
 const queryClient = new QueryClient();
 
@@ -47,6 +48,7 @@ const App = () => (
             <Route path="/about" element={<About />} />
             <Route path="/orders" element={<OrdersPage />} />
             <Route path="/products" element={<AllProducts />} />
+            <Route path="/search" element={<SearchPage />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>

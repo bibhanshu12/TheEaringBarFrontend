@@ -73,56 +73,58 @@ const OrdersPage = () => {
   return (
     <div className="min-h-screen flex flex-col">
       <Navbar />
-      <main className="flex-grow pt-24 px-4">
-        <div className="container mx-auto py-8">
-          <h1 className="text-3xl font-bold mb-8 text-gold-antique">Your Orders</h1>
+      <main className="flex-grow pt-20 px-4 sm:pt-24">
+        <div className="container mx-auto py-4 sm:py-8">
+          <h1 className="text-2xl sm:text-3xl font-bold mb-6 sm:mb-8 text-gold-antique">Your Orders</h1>
           
           {data?.orders.length === 0 ? (
-            <div className="text-center py-16">
-              <ShoppingBag className="mx-auto h-12 w-12 text-gold-bronze opacity-50" />
-              <h3 className="mt-2 text-lg font-medium text-gray-900">No orders yet</h3>
+            <div className="text-center py-12 sm:py-16">
+              <ShoppingBag className="mx-auto h-10 w-10 sm:h-12 sm:w-12 text-gold-bronze opacity-50" />
+              <h3 className="mt-2 text-base sm:text-lg font-medium text-gray-900">No orders yet</h3>
               <p className="mt-1 text-sm text-gray-500">Start shopping to place your first order!</p>
             </div>
           ) : (
-            <div className="space-y-6">
+            <div className="space-y-4 sm:space-y-6">
               {data?.orders.map((order) => (
-                <div key={order.id} className="bg-white rounded-lg shadow-md p-6">
-                  <div className="flex items-center justify-between mb-4">
-                    <div className="flex items-center space-x-4">
-                      <Package className="text-gold-antique" size={24} />
+                <div key={order.id} className="bg-white rounded-lg shadow-md p-4 sm:p-6">
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-4 gap-2">
+                    <div className="flex items-center space-x-3">
+                      <Package className="text-gold-antique w-5 h-5 sm:w-6 sm:h-6" />
                       <div>
-                        <p className="text-sm text-gray-500">Order ID</p>
-                        <p className="font-medium">{order.id}</p>
+                        <p className="text-xs sm:text-sm text-gray-500">Order ID</p>
+                        <p className="text-sm font-medium truncate max-w-[180px] sm:max-w-none">
+                          {order.id}
+                        </p>
                       </div>
                     </div>
                     <OrderStatusBadge status={order.status} />
                   </div>
 
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+                  <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 sm:gap-4 mb-4">
                     <div className="flex items-center space-x-2">
-                      <Calendar className="text-gold-antique" size={20} />
+                      <Calendar className="text-gold-antique hidden sm:block" size={20} />
                       <div>
-                        <p className="text-sm text-gray-500">Order Date</p>
-                        <p className="font-medium">
+                        <p className="text-xs sm:text-sm text-gray-500">Order Date</p>
+                        <p className="text-sm font-medium">
                           {format(new Date(order.createdAt), 'MMM dd, yyyy')}
                         </p>
                       </div>
                     </div>
 
                     <div className="flex items-center space-x-2">
-                      <IndianRupee className="text-gold-antique" size={20} />
+                      <IndianRupee className="text-gold-antique hidden sm:block" size={20} />
                       <div>
-                        <p className="text-sm text-gray-500">Total Amount</p>
-                        <p className="font-medium">₹{order.finalAmount.toFixed(2)}</p>
+                        <p className="text-xs sm:text-sm text-gray-500">Total Amount</p>
+                        <p className="text-sm font-medium">₹{order.finalAmount.toFixed(2)}</p>
                       </div>
                     </div>
 
                     {order.discountAmount && (
-                      <div className="flex items-center space-x-2">
-                        <CheckCircle2 className="text-green-500" size={20} />
+                      <div className="flex items-center space-x-2 col-span-2 sm:col-span-1">
+                        <CheckCircle2 className="text-green-500 hidden sm:block" size={20} />
                         <div>
-                          <p className="text-sm text-gray-500">Discount Applied</p>
-                          <p className="font-medium text-green-600">
+                          <p className="text-xs sm:text-sm text-gray-500">Discount</p>
+                          <p className="text-sm font-medium text-green-600">
                             -₹{order.discountAmount.toFixed(2)}
                           </p>
                         </div>
@@ -131,10 +133,10 @@ const OrdersPage = () => {
                   </div>
 
                   {order.status !== 'CANCELLED' && order.status !== 'REFUNDED' && (
-                    <div className="mt-4 flex justify-end">
+                    <div className="mt-3 sm:mt-4 flex justify-end border-t pt-3 sm:pt-4">
                       <button
                         onClick={() => handleCancelOrder(order.id, order.status)}
-                        className="text-red-600 hover:text-red-700 font-medium"
+                        className="text-red-600 hover:text-red-700 font-medium text-sm sm:text-base"
                       >
                         {order.status === 'PENDING' ? 'Delete Order' : 'Cancel Order'}
                       </button>

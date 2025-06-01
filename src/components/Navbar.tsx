@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useAppSelector } from '../store/hooks';
 import { ShoppingCart, ChevronDown, Menu, X, Search, Package } from 'lucide-react';
 import { useGetAllCategoriesQuery } from '../store/services/categoriesApi';
 import { useGetCartQuery } from '../store/services/cartApi';
+import { useDebounce } from '../hooks/debounceHook';
+import { SearchResults } from './searchComponent';
 
 const Navbar = () => {
   const { data: cartData } = useGetCartQuery();
@@ -11,6 +13,9 @@ const Navbar = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
+  const [searchTerm, setSearchTerm] = useState('');
+  const debouncedSearchTerm = useDebounce(searchTerm, 500);
+  const navigate = useNavigate();
 
   // Fetch categories
   const { data: categoriesData, isLoading: isCategoriesLoading } = useGetAllCategoriesQuery();
@@ -27,6 +32,48 @@ const Navbar = () => {
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
+
+  const handleSearchSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (searchTerm.trim()) {
+      navigate(`/search?q=${encodeURIComponent(searchTerm.trim())}`);
+      setIsSearchOpen(false);
+      setIsMobileMenuOpen(false);
+    }
+  };
+
+  // Update the search input in both desktop and mobile views
+  const searchInput = (
+    <form onSubmit={handleSearchSubmit} className="relative">
+      <input 
+        type="text" 
+        value={searchTerm}
+        onChange={(e) => setSearchTerm(e.target.value)}
+        placeholder="Search for jewelry..." 
+        className="w-full p-2 border border-gold-antique rounded-md focus:outline-none focus:ring-1 focus:ring-gold-bronze"
+      />
+      <button 
+        type="button"
+        className="absolute right-2 top-1/2 transform -translate-y-1/2 text-gold-antique hover:text-gold-bronze"
+        onClick={() => setSearchTerm('')}
+      >
+        {searchTerm ? <X size={18} /> : <Search size={18} />}
+      </button>
+      
+      {/* Search Results Dropdown */}
+      {isSearchOpen && searchTerm && !isMobileMenuOpen && (
+        <div className="absolute top-full left-0 w-full bg-white shadow-lg rounded-b-lg mt-1 z-50">
+          <SearchResults 
+            searchTerm={debouncedSearchTerm} 
+            onClose={() => {
+              setIsSearchOpen(false);
+              setSearchTerm('');
+            }} 
+          />
+        </div>
+      )}
+    </form>
+  );
 
   return (
     <header className={`fixed top-0 left-0 w-full z-40 transition-all duration-300 ${isScrolled ? 'bg-white shadow-md py-2' : 'bg-transparent  '}`}>
@@ -112,7 +159,12 @@ const Navbar = () => {
         {/* Mobile Menu Button - Only visible on mobile */}
         <button 
           className="md:hidden absolute top-4 left-4 text-gold-antique"
-          onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+          onClick={() => {
+            setIsMobileMenuOpen(!isMobileMenuOpen);
+            if (!isMobileMenuOpen) {
+              setIsSearchOpen(false);
+            }
+          }}
         >
           {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
         </button>
@@ -120,16 +172,7 @@ const Navbar = () => {
         {/* Search Overlay */}
         {isSearchOpen && (
           <div className="absolute top-full left-0 w-full bg-white shadow-md p-4 z-30 animate-fade-in">
-            <div className="relative">
-              <input 
-                type="text" 
-                placeholder="Search for jewelry..." 
-                className="w-full p-2 border border-gold-antique rounded-md focus:outline-none focus:ring-1 focus:ring-gold-bronze"
-              />
-              <button className="absolute right-2 top-1/2 transform -translate-y-1/2 text-gold-antique hover:text-gold-bronze">
-                <Search size={18} />
-              </button>
-            </div>
+            {searchInput}
           </div>
         )}
         
@@ -152,14 +195,7 @@ const Navbar = () => {
 
               {/* Mobile Search */}
               <div className="mb-6">
-                <div className="relative">
-                  <input 
-                    type="text" 
-                    placeholder="Search for jewelry..." 
-                    className="w-full p-3 border border-gold-antique/20 rounded-md focus:outline-none focus:ring-1 focus:ring-gold-bronze bg-gray-50"
-                  />
-                  <Search className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gold-antique" size={20} />
-                </div>
+                {searchInput}
               </div>
 
               {/* Mobile Navigation */}

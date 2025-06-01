@@ -59,6 +59,10 @@ export const useCartProducts = (cartItems: CartItem[]) => {
     [enrichedCartItems]
   );
 
+  // Add console log to debug
+  console.log('Products Data:', productsData);
+  console.log('Enriched Cart Items:', enrichedCartItems);
+
   return {
     enrichedCartItems,
     isLoading,

@@ -66,6 +66,23 @@ export const orderApi = createApi({
       }),
       invalidatesTags: ['Order'],
     }),
+    doNewsLetterMail: builder.mutation<{ success: boolean; message: string }, { email: string }>({
+      query: (body) => ({
+        url: '/api/newsletter/suscribe',
+        method: 'POST',
+        body,
+      }),
+    }),
+    mailOrder: builder.mutation<
+      { success: boolean; message: string },
+      { addressId: string; orderId: string }
+    >({
+      query: (body) => ({
+        url: '/api/order/mailorder',
+        method: 'POST',
+        body,
+      }),
+    }),
   }),
 });
 
@@ -74,4 +91,6 @@ export const {
   usePlaceOrderMutation,
   useDeleteOrderMutation,
   useUpdateOrderStatusMutation,
+  useDoNewsLetterMailMutation,
+  useMailOrderMutation,
 } = orderApi;

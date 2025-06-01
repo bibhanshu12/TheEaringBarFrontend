@@ -1,26 +1,22 @@
-
 import React, { useState } from 'react';
-import { useToast } from '@/hooks/use-toast';
+import { toast } from 'sonner';
+import { useDoNewsLetterMailMutation } from '../store/services/orderApi';
+import { Loader2 } from 'lucide-react';
 
 const NewsletterSection = () => {
   const [email, setEmail] = useState('');
-  const [isSubscribing, setIsSubscribing] = useState(false);
-  const { toast } = useToast();
+  const [doNewsLetterMail, { isLoading: isSubscribing }] = useDoNewsLetterMailMutation();
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setIsSubscribing(true);
     
-    // Simulate API call
-    setTimeout(() => {
-      setIsSubscribing(false);
+    try {
+      await doNewsLetterMail({ email }).unwrap();
+      toast.success("Successfully subscribed to newsletter!");
       setEmail('');
-      toast({
-        title: "Subscription successful!",
-        description: "You've been added to our newsletter.",
-        duration: 3000,
-      });
-    }, 1500);
+    } catch (error: any) {
+      toast.error(error?.data?.message || "Failed to subscribe to newsletter");
+    }
   };
 
   return (
@@ -42,12 +38,23 @@ const NewsletterSection = () => {
             <button 
               type="submit"
               disabled={isSubscribing}
-              className={`btn-primary flex items-center justify-center min-w-[120px] ${isSubscribing ? 'opacity-70 cursor-not-allowed' : ''}`}
+              className={`btn-primary flex items-center justify-center min-w-[120px] ${
+                isSubscribing ? 'opacity-70 cursor-not-allowed' : ''
+              }`}
             >
-              {isSubscribing ? 'Subscribing...' : 'Subscribe'}
+              {isSubscribing ? (
+                <span className="flex items-center">
+                  <Loader2 className="animate-spin mr-2" size={16} />
+                  Subscribing...
+                </span>
+              ) : (
+                'Subscribe'
+              )}
             </button>
           </form>
-          <p className="mt-4 text-sm opacity-80">We respect your privacy and will never share your email</p>
+          <p className="mt-4 text-sm opacity-80">
+            We respect your privacy and will never share your email
+          </p>
         </div>
       </div>
     </section>

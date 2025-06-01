@@ -44,54 +44,51 @@ const CartPage = () => {
     );
   }
 
-  const CartItemCard = ({ item }: { item: EnrichedCartItem }) => (
-    <div className="bg-white rounded-lg shadow-md p-4 mb-4">
-      <div className="flex gap-4">
-        <div className="w-24 h-24 flex-shrink-0">
-          {item.productDetails?.images?.[0] && (
-            <img 
-              src={item.productDetails.images[0].imageUrl} 
-              alt={item.productDetails.name}
-              className="w-full h-full object-cover rounded"
-            />
-          )}
-        </div>
-        <div className="flex-grow">
-          <Link 
-            to={`/product/${item.productId}`}
-            className="text-gold-antique hover:text-gold-bronze"
-          >
-            <h3 className="font-medium">{item.productDetails?.name}</h3>
-          </Link>
-          <p className="text-sm text-gold-antique/70 mt-1">
-            Stock: {item.productDetails?.stock}
-          </p>
-          <div className="flex justify-between items-center mt-2">
-            <div>
-              <p className="text-gold-bronze font-medium">
-                ${item.productDetails?.price.toFixed(2)}
-              </p>
-              <p className="text-sm text-gold-antique/70">
-                Qty: {item.quantity}
-              </p>
-            </div>
-            <div>
-              <p className="text-gold-antique font-bold">
-                ${(item.productDetails?.price * item.quantity).toFixed(2)}
-              </p>
+  const CartItemCard = ({ item }: { item: EnrichedCartItem }) => {
+    return (
+      <div className="bg-white rounded-lg shadow-md p-4 mb-4">
+        <div className="flex flex-col sm:flex-row gap-4">
+          <div className="flex-grow">
+            <div className="flex flex-col sm:flex-row justify-between">
+              <div>
+                <Link 
+                  to={`/product/${item.productId}`}
+                  className="text-gold-antique hover:text-gold-bronze"
+                >
+                  <h3 className="font-medium text-lg">{item.productDetails?.name}</h3>
+                </Link>
+                <p className="text-sm text-gold-antique/70 mt-1">
+                  Stock: {item.productDetails?.stock}
+                </p>
+              </div>
               <button 
                 onClick={() => handleRemoveItem(item.id)}
                 disabled={isDeleting}
-                className="text-red-500 hover:text-red-700 disabled:opacity-50 mt-2"
+                className="text-red-500 hover:text-red-700 disabled:opacity-50 self-start mt-2 sm:mt-0"
               >
                 <Trash size={18} />
               </button>
             </div>
+            <div className="flex justify-between items-end mt-4">
+              <div>
+                <p className="text-gold-bronze font-medium">
+                  ₹{item.productDetails?.price.toFixed(2)}
+                </p>
+                <p className="text-sm text-gold-antique/70">
+                  Qty: {item.quantity}
+                </p>
+              </div>
+              <div>
+                <p className="text-gold-antique font-bold">
+                  ₹{(item.productDetails?.price * item.quantity).toFixed(2)}
+                </p>
+              </div>
+            </div>
           </div>
         </div>
       </div>
-    </div>
-  );
+    );
+  };
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -139,14 +136,7 @@ const CartPage = () => {
                               to={`/product/${item.productId}`} 
                               className="text-gold-antique hover:text-gold-bronze"
                             >
-                              <div className="flex items-center space-x-4">
-                                {item.productDetails?.images?.[0] && (
-                                  <img 
-                                    src={item.productDetails.images[0].imageUrl} 
-                                    alt={item.productDetails.name}
-                                    className="w-16 h-16 object-cover rounded"
-                                  />
-                                )}
+                              <div className="flex items-center">
                                 <div>
                                   <h3 className="font-medium">{item.productDetails?.name}</h3>
                                   <p className="text-sm text-gold-antique/70">

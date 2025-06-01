@@ -6,7 +6,7 @@ import { PlusCircle, Loader2, Trash, Edit } from 'lucide-react';
 import { toast } from 'sonner';
 import type { Address } from '../store/services/addressApi';
 import { useNavigate } from 'react-router-dom';
-import { usePlaceOrderMutation } from '../store/services/orderApi';
+import { usePlaceOrderMutation, useMailOrderMutation } from '../store/services/orderApi';
 
 interface AddressSelectionDialogProps {
   isOpen: boolean;
@@ -26,6 +26,7 @@ export const AddressSelectionDialog: React.FC<AddressSelectionDialogProps> = ({
   const [selectedAddressId, setSelectedAddressId] = useState<string>('');
   const [editingAddress, setEditingAddress] = useState<Address | null>(null);
   const [placeOrder, { isLoading: isPlacingOrder }] = usePlaceOrderMutation();
+  const [mailOrder] = useMailOrderMutation();
 
   const addresses = addressResponse?.allAddress ?? [];
 
@@ -42,11 +43,25 @@ export const AddressSelectionDialog: React.FC<AddressSelectionDialogProps> = ({
   const handleContinue = async () => {
     if (selectedAddressId) {
       try {
-        await placeOrder({ addressId: selectedAddressId }).unwrap();
-        toast.success('Order placed successfully!');
-        onAddressSelect(selectedAddressId);
-        onClose();
-        navigate('/orders'); // Redirect to orders page
+        // First place the order
+        const orderResult = await placeOrder({ addressId: selectedAddressId }).unwrap();
+        
+        // Then send the mail
+        const mailResult = await mailOrder({
+          addressId: selectedAddressId,
+          orderId: orderResult.order.id
+        }).unwrap();
+        
+        if (mailResult.Success === 'true') {
+          toast.success('Order placed successfully!');
+          onAddressSelect(selectedAddressId);
+          onClose();
+          navigate('/orders'); // Redirect to orders page
+        } else {
+          // Order placed but mail failed
+          toast.warning('Order placed but confirmation email failed to send');
+          navigate('/orders');
+        }
       } catch (error: any) {
         toast.error(error?.data?.msg || 'Failed to place order');
       }
@@ -101,7 +116,12 @@ export const AddressSelectionDialog: React.FC<AddressSelectionDialogProps> = ({
                             className="mt-1 mr-3"
                           />
                           <div>
-                            <p className="text-sm text-gray-600">{address.label}</p>
+                            <p className="font-medium text-sm">
+                              {address.label?.split('|')[0]?.trim()}
+                            </p>
+                            <p className="text-sm text-gray-600">
+                              {address.label?.split('|')[1]?.trim()}
+                            </p>
                             <p className="text-sm text-gray-600">{address.street}</p>
                             <p className="text-sm text-gray-600">
                               {address.city}, {address.state} {address.zipCode}

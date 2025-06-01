@@ -151,6 +151,13 @@ export const productsApi = createApi({
             ]
           : [{ type: 'Products', id: 'LIST' }],
     }),
+    searchProducts: builder.query<ApiResponse<Product[]>, string>({
+      query: (searchTerm) => ({
+        url: `/api/products/search?q=${encodeURIComponent(searchTerm)}`,
+        method: 'GET',
+      }),
+      providesTags: ['Products'],
+    }),
   }),
 });
 
@@ -164,4 +171,5 @@ export const {
   useUpdateProductColorsMutation ,
   useAssignOfferToProductMutation,
   useGetProductsByIdsQuery,
+  useSearchProductsQuery,
 } = productsApi;

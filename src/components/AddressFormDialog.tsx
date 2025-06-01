@@ -13,7 +13,13 @@ interface AddressFormDialogProps {
 }
 
 interface ExtendedAddressFormData extends Omit<AddressFormData, 'label'> {
-  fullName: string; // This will be used for the label
+  fullName: string;
+  whatsappNumber: string;
+  street: string;
+  city: string;
+  state: string;
+  zipCode: string;
+  country: string;
 }
 
 export const AddressFormDialog: React.FC<AddressFormDialogProps> = ({
@@ -24,7 +30,8 @@ export const AddressFormDialog: React.FC<AddressFormDialogProps> = ({
 }) => {
   const { register, handleSubmit, reset, formState: { errors } } = useForm<ExtendedAddressFormData>({
     defaultValues: editingAddress ? {
-      fullName: editingAddress.label || '',
+      fullName: editingAddress.label?.split('|')[0]?.trim() || '',
+      whatsappNumber: editingAddress.label?.split('|')[1]?.trim() || '',
       street: editingAddress.street,
       city: editingAddress.city,
       state: editingAddress.state,
@@ -40,14 +47,14 @@ export const AddressFormDialog: React.FC<AddressFormDialogProps> = ({
   const onSubmit = async (data: ExtendedAddressFormData) => {
     setIsSubmitting(true);
     try {
-      // Transform the data to match backend requirements
+      // Combine name and WhatsApp number for label
       const addressData: AddressFormData = {
         street: data.street,
         zipCode: data.zipCode,
         city: data.city,
         country: data.country,
         state: data.state,
-        label: data.fullName // Using fullName as the label
+        label: `${data.fullName} | ${data.whatsappNumber}`
       };
 
       if (editingAddress) {
@@ -72,21 +79,43 @@ export const AddressFormDialog: React.FC<AddressFormDialogProps> = ({
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-[500px]">
+      <DialogContent className="sm:max-w-[500px] max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle>{editingAddress ? 'Edit Address' : 'Add New Address'}</DialogTitle>
         </DialogHeader>
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-          <div>
-            <label className="block text-sm font-medium mb-1">Full Name</label>
-            <input
-              {...register("fullName", { required: "Full name is required" })}
-              className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-gold-antique"
-              placeholder="Enter your full name"
-            />
-            {errors.fullName && (
-              <p className="text-red-500 text-sm mt-1">{errors.fullName.message}</p>
-            )}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium mb-1">Full Name</label>
+              <input
+                {...register("fullName", { required: "Full name is required" })}
+                className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-gold-antique"
+                placeholder="Enter your full name"
+              />
+              {errors.fullName && (
+                <p className="text-red-500 text-sm mt-1">{errors.fullName.message}</p>
+              )}
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium mb-1">WhatsApp Number</label>
+              <input
+                {...register("whatsappNumber", { 
+                  required: "WhatsApp number is required",
+                  pattern: {
+                    value: /^[0-9]{10}$/,
+                    message: "Please enter a valid 10-digit number"
+                  }
+                })}
+                className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-gold-antique"
+                placeholder="Enter WhatsApp number"
+                type="tel"
+                maxLength={10}
+              />
+              {errors.whatsappNumber && (
+                <p className="text-red-500 text-sm mt-1">{errors.whatsappNumber.message}</p>
+              )}
+            </div>
           </div>
 
           <div>
@@ -101,7 +130,7 @@ export const AddressFormDialog: React.FC<AddressFormDialogProps> = ({
             )}
           </div>
 
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
               <label className="block text-sm font-medium mb-1">City</label>
               <input
@@ -127,7 +156,7 @@ export const AddressFormDialog: React.FC<AddressFormDialogProps> = ({
             </div>
           </div>
 
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
               <label className="block text-sm font-medium mb-1">ZIP Code</label>
               <input
