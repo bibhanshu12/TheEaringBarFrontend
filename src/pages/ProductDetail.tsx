@@ -7,7 +7,7 @@ import { Navigation, Thumbs } from 'swiper/modules';
 import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/thumbs';
-import { Star, ShoppingCart, Heart } from 'lucide-react';
+import { ShoppingCart, Heart } from 'lucide-react';
 
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
@@ -17,6 +17,7 @@ import { useGetColorByIdQuery } from '../store/services/colorsApi';
 import { selectIsAuthenticated } from '../store/authSlice';
 import { useAddToCartMutation } from '../store/services/cartApi';
 import { useGetCartQuery } from '../store/services/cartApi';
+import type { Swiper as SwiperType } from 'swiper';
 
 interface Color {
   id: string;
@@ -73,7 +74,7 @@ const ProductDetail = () => {
   const dispatch = useAppDispatch();
   const isAuthenticated = useAppSelector(selectIsAuthenticated);
   const [quantity, setQuantity] = useState(1);
-  const [thumbsSwiper, setThumbsSwiper] = useState<any>(null);
+  const [thumbsSwiper, setThumbsSwiper] = useState<SwiperType | null>(null);
   const [selectedColor, setSelectedColor] = useState<Color | null>(null);
   const [showAuthModal, setShowAuthModal] = useState(false);
   const [addToCartMutation] = useAddToCartMutation();
@@ -110,11 +111,11 @@ const ProductDetail = () => {
 
       const response = await addToCartMutation(cartItem).unwrap();
 
-      if (response.status === 200) {
-        toast.success("Added to cart successfully!");
-        refetchCart(); // Refresh cart data
-      }
-    } catch (error: any) {
+      // if (response.status === 200) {
+      //   toast.success("Added to cart successfully!");
+      //   refetchCart(); // Refresh cart data
+      // }
+    } catch (error) {
       if (error.status === 401) {
         setShowAuthModal(true);
       } else {
@@ -213,12 +214,6 @@ const ProductDetail = () => {
             
             {/* Product Info */}
             <div className="lg:pl-8">
-              {product.new && (
-                <span className="inline-block bg-gold-bronze text-white text-xs px-2 py-1 rounded-sm font-semibold mb-2">
-                  New Arrival
-                </span>
-              )}
-              
               <h1 className="text-3xl font-bold text-gold-antique mb-2">{product.name}</h1>
               
               {/* <div className="flex items-center mb-4">
@@ -239,7 +234,7 @@ const ProductDetail = () => {
               </div> */}
               
               <div className="text-2xl font-bold text-gold-bronze mb-6">
-                ${product.price.toLocaleString()}
+                रू {product.price.toLocaleString()}
               </div>
               
               <p className="text-gold-antique/80 mb-6">
@@ -353,7 +348,9 @@ const ProductDetail = () => {
                   </div>
                   <div className="w-full md:w-1/2">
                     <h4 className="font-semibold text-gold-antique mb-1">Category</h4>
-                    <p className="text-gold-antique/70 text-sm">{product.category}</p>
+                    <p className="text-gold-antique/70 text-sm">
+                      {product.categories.map(cat => cat.name).join(', ')}
+                    </p>
                   </div>
                 </div>
               </div>

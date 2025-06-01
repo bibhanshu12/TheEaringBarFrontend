@@ -9,20 +9,20 @@ import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
 import 'swiper/css/grid';
-import { Product } from '@/models/type';
+import { Product } from '../models/type';
 
 interface FeaturedCategoriesProps {
   title: string;
-  subtitle?: string;
-  products?:Product; // Replace with your Product type
+  subtitle: string;
+  products: Product[];
   isLoading: boolean;
   error?: string;
 }
 
 const FeaturedCategories: React.FC<FeaturedCategoriesProps> = ({
   title,
-  subtitle = 'Discover our most exquisite pieces',
-  products = [],
+  subtitle,
+  products,
   isLoading,
   error
 }) => {

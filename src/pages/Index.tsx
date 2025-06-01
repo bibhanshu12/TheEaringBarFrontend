@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { useAppDispatch } from '../store/hooks';
-import { fetchProducts } from '../store/features/productsSlice';
+// import { fetchProducts } from '../store/features/productsSlice';
 import { useNavigate } from 'react-router-dom';
 import { useGetProductsByCategoryQuery } from '../store/services/categoriesApi';
 
@@ -37,7 +37,7 @@ const Index = () => {
 
   // console.log(favouriteProducts?.data)
   useEffect(() => {
-    dispatch(fetchProducts());
+    // dispatch(fetchProducts());
   }, [dispatch]);
 
   const handleCategorySelect = (category) => {
@@ -65,7 +65,7 @@ const Index = () => {
               subtitle="Explore our newest arrivals"
               products={latestProducts?.data || []}
               isLoading={isLatestLoading}
-              error={latestError?.message}
+              // error={latestError?.message}
             />
           </div>
 
@@ -75,7 +75,7 @@ const Index = () => {
               subtitle="Our most loved pieces"
               products={favouriteProducts?.data || []}
               isLoading={isFavouriteLoading}
-              error={favouriteError?.message}
+              
             />
           </div>
 

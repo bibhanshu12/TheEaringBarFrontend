@@ -6,7 +6,7 @@ import { PlusCircle, Loader2, Trash, Edit } from 'lucide-react';
 import { toast } from 'sonner';
 import type { Address } from '../store/services/addressApi';
 import { useNavigate } from 'react-router-dom';
-import { usePlaceOrderMutation, useMailOrderMutation } from '../store/services/orderApi';
+import { usePlaceOrderAndMailMutation } from '../store/services/orderApi';
 
 interface AddressSelectionDialogProps {
   isOpen: boolean;
@@ -25,8 +25,7 @@ export const AddressSelectionDialog: React.FC<AddressSelectionDialogProps> = ({
   const [showAddressForm, setShowAddressForm] = useState(false);
   const [selectedAddressId, setSelectedAddressId] = useState<string>('');
   const [editingAddress, setEditingAddress] = useState<Address | null>(null);
-  const [placeOrder, { isLoading: isPlacingOrder }] = usePlaceOrderMutation();
-  const [mailOrder] = useMailOrderMutation();
+  const [placeOrderAndMail, { isLoading: isPlacingOrder }] = usePlaceOrderAndMailMutation();
 
   const addresses = addressResponse?.allAddress ?? [];
 
@@ -43,27 +42,16 @@ export const AddressSelectionDialog: React.FC<AddressSelectionDialogProps> = ({
   const handleContinue = async () => {
     if (selectedAddressId) {
       try {
-        // First place the order
-        const orderResult = await placeOrder({ addressId: selectedAddressId }).unwrap();
+        const result = await placeOrderAndMail({ addressId: selectedAddressId }).unwrap();
         
-        // Then send the mail
-        const mailResult = await mailOrder({
-          addressId: selectedAddressId,
-          orderId: orderResult.order.id
-        }).unwrap();
-        
-        if (mailResult.Success === 'true') {
+        if (result.success) {
           toast.success('Order placed successfully!');
           onAddressSelect(selectedAddressId);
           onClose();
           navigate('/orders'); // Redirect to orders page
-        } else {
-          // Order placed but mail failed
-          toast.warning('Order placed but confirmation email failed to send');
-          navigate('/orders');
         }
-      } catch (error: any) {
-        toast.error(error?.data?.msg || 'Failed to place order');
+      } catch (error) {
+        toast.error(error?.data?.message || 'Failed to place order');
       }
     }
   };

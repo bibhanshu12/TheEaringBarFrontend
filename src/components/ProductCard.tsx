@@ -2,7 +2,8 @@ import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { addToCart } from '../store/features/cartSlice';
 import { useAppDispatch } from '../store/hooks';
-import { Product } from '../store/features/productsSlice';
+// import { Product } from '../store/features/productsSlice';
+import { Product } from '@/models/type';
 import { ShoppingCart, Star, Eye } from 'lucide-react';
 
 interface ProductCardProps {
@@ -15,12 +16,18 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
 
   const handleAddToCart = (e: React.MouseEvent) => {
     e.stopPropagation(); // Prevent navigation when clicking add to cart
+    
+    // Get the image URL from the first image or use a default
+    const imageUrl = product.images?.[0]?.imageUrl || '';
+    
     dispatch(addToCart({
       id: product.id,
       name: product.name,
       price: product.price,
-      image: product.images[0],
-      quantity: 1
+      image: imageUrl, 
+      quantity: 1,
+      stock: product.stock,
+      colorId: undefined // Add this if color is selected
     }));
   };
 
@@ -34,7 +41,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
       className="group relative overflow-hidden bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300 cursor-pointer"
     >
       {/* Badges */}
-      {product.featured && (
+      {/* {product.featured && (
         <span className="absolute top-3 left-3 z-10 bg-gold-standard text-black text-xs px-2 py-1 rounded-sm font-semibold">
           Featured
         </span>
@@ -43,7 +50,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
         <span className="absolute top-3 left-3 z-10 bg-gold-bronze text-white text-xs px-2 py-1 rounded-sm font-semibold">
           New
         </span>
-      )}
+      )} */}
       
       {/* Product Image */}
       <div className="relative h-60 overflow-hidden">
@@ -77,18 +84,21 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
         <h3 className="text-lg font-semibold mb-1 text-gold-antique group-hover:text-gold-bronze transition-colors">
           {product.name}
         </h3>
+        <h4 className="text-sm  mb-1 text-gold-antique group-hover:text-gold-bronze transition-colors">
+          {product.description}
+        </h4>
         
         <div className="flex justify-between items-center mb-3">
           <span className="text-xl text-gold-bronze">
             रू.<span className="font-bold">{product.price.toLocaleString()}</span>
           </span>
           
-          {product.rating && (
+          {/* {product.rating && (
             <div className="flex items-center">
               <Star className="text-gold-standard fill-gold-standard" size={14} />
               <span className="ml-1 text-sm">{product.rating}</span>
             </div>
-          )}
+          )} */}
         </div>
 
         {/* Add to Cart Button */}

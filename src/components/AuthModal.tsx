@@ -80,7 +80,7 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, onSuccess }) => 
           onClose();
         }
       }
-    } catch (error: any) {
+    } catch (error) {
       const errorMessage = error.data?.msg || error.data?.message || 'Authentication failed';
       toast.error(errorMessage);
       

@@ -38,7 +38,7 @@ const OrdersPage = () => {
         await updateOrderStatus({ orderId, status: 'CANCELLED' }).unwrap();
         toast.success('Order cancelled successfully');
       }
-    } catch (error: any) {
+    } catch (error) {
       toast.error(error?.data?.msg || 'Failed to cancel order');
     }
   };

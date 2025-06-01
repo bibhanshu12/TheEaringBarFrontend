@@ -7,6 +7,10 @@ interface AuthState {
   isAuthenticated: boolean;
   token: string | null;
 }
+interface AuthResponseData {
+  user: User;
+  token: string;
+}
 
 const loadInitialState = (): AuthState => {
   try {
@@ -28,7 +32,7 @@ const authSlice = createSlice({
   name: 'auth',
   initialState,
   reducers: {
-    setCredentials: (state, action: PayloadAction<{user: User, token: string}>) => {
+    setCredentials: (state, action: PayloadAction<AuthResponseData>) => {
       state.user = action.payload.user;
       state.token = action.payload.token;
       state.isAuthenticated = true;

@@ -5,7 +5,7 @@
     useEffect(() => {
       axios.get(`${import.meta.env.VITE_API_BASE_URL}/api/allproducts`,{ withCredentials: true })
         .then((response) => {
-          console.log(response.data); // ✅ logs all products
+          // console.log(response.data); // ✅ logs all products
         })
         .catch((error) => {
           console.log(error);

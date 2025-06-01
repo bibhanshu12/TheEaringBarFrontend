@@ -28,7 +28,7 @@ const CartPage = () => {
 
   const handleAddressSelect = (addressId: string) => {
     // Handle the selected address and proceed with checkout
-    console.log('Selected address:', addressId);
+    // console.log('Selected address:', addressId);
     // Add your checkout logic here
   };
 

@@ -14,7 +14,7 @@ const NewsletterSection = () => {
       await doNewsLetterMail({ email }).unwrap();
       toast.success("Successfully subscribed to newsletter!");
       setEmail('');
-    } catch (error: any) {
+    } catch (error) {
       toast.error(error?.data?.message || "Failed to subscribe to newsletter");
     }
   };

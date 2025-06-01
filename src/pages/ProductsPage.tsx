@@ -4,16 +4,7 @@ import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import ProductCard from '../components/ProductCard';
 import { Skeleton } from '../components/ui/Skeleton';
-
-interface Product {
-  id: string;
-  name: string;
-  description: string;
-  price: number;
-  images: Array<{ imageUrl: string }>;
-  rating?: number;
-  stock: number;
-}
+import { Product } from '@/models/type'; // Import the Product type
 
 interface ProductResponse {
   msg: string;
@@ -32,7 +23,17 @@ const ProductsPage = () => {
       try {
         setIsLoading(true);
         const response = await axios.get<ProductResponse>('http://localhost:3000/api/allproducts');
-        setProducts(response.data.data);
+        
+        // Transform the response data to match the Product interface
+        const transformedProducts: Product[] = response.data.data.map(product => ({
+          ...product,
+          categories: product.categories || [],
+          colors: product.colors || [],
+          createdAt: product.createdAt || new Date().toISOString(),
+          updatedAt: product.updatedAt || new Date().toISOString()
+        }));
+        
+        setProducts(transformedProducts);
       } catch (err) {
         setError('Failed to load products. Please try again later.');
         console.error('Error fetching products:', err);

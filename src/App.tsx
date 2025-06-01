@@ -18,6 +18,10 @@ import { useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import OrdersPage from "./pages/OrderPage";
 import SearchPage from "./pages/SearchPage";
+import CareInstructions from "./components/footerElements/CareInstructions";
+import FAQ from "./components/footerElements/FAQ";
+import Warranty from "./components/footerElements/Warranty";
+import SizingGuide from "./components/footerElements/Sizing";
 
 const queryClient = new QueryClient();
 
@@ -48,8 +52,11 @@ const App = () => (
             <Route path="/about" element={<About />} />
             <Route path="/orders" element={<OrdersPage />} />
             <Route path="/products" element={<AllProducts />} />
+            <Route path="/care" element={<CareInstructions />} />
+            <Route path="/faq" element={<FAQ />} />
+            <Route path="/warranty" element={<Warranty />} />
+            <Route path="/sizing" element={<SizingGuide />} />
             <Route path="/search" element={<SearchPage />} />
-            {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>
         </BrowserRouter>

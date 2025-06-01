@@ -1,40 +1,132 @@
-
 import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
-
-// Remove the axios import since it's not being used
-
-export interface Product {
-  id: string;
-  name: string;
-  description: string;
-  price: number;
-  category: string;
-  images: string[];
-  featured?: boolean;
-  new?: boolean;
-  rating?: number;
-}
+import { Product, Category, ProductImage } from '@/models/type';
 
 interface ProductsState {
   items: Product[];
   featuredItems: Product[];
   newArrivals: Product[];
-  categories: string[];
+  categories: Category[];
   status: 'idle' | 'loading' | 'succeeded' | 'failed';
   error: string | null;
 }
 
-// In a real application, you'd fetch this from an API
-export const fetchProducts = createAsyncThunk(
-  'products/fetchProducts',
-  async () => {
-    // In a real app, this would be an API call
-    // return (await axios.get('/api/products')).data;
-    
-    // For this demo, we'll return mock data
-    return mockProducts;
-  }
-);
+const mockProducts: Product[] = [
+  {
+    id: '1',
+    name: 'Diamond Eternity Ring',
+    description: 'Exquisite diamond ring featuring 24 round brilliant diamonds in a classic setting.',
+    price: 2499,
+    stock: 10,
+    categories: [
+      {
+        id: '1',
+        name: 'Rings',
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString()
+      }
+    ],
+    images: [
+      {
+        id: '1',
+        imageUrl: '/images/diamond-ring-1.jpg',
+        publicId: 'diamond-ring-1',
+        isDefault: true,
+        productId: '1',
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString()
+      },
+      {
+        id: '2',
+        imageUrl: '/images/diamond-ring-2.jpg',
+        publicId: 'diamond-ring-2',
+        isDefault: false,
+        productId: '1',
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString()
+      }
+    ],
+    colors: [],
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString()
+  },
+  {
+    id: '2',
+    name: 'Pearl Necklace',
+    description: 'Elegant freshwater pearl necklace with 18K gold clasp.',
+    price: 899,
+    stock: 15,
+    categories: [
+      {
+        id: '2',
+        name: 'Necklaces',
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString()
+      }
+    ],
+    images: [
+      {
+        id: '3',
+        imageUrl: '/images/pearl-necklace-1.jpg',
+        publicId: 'pearl-necklace-1',
+        isDefault: true,
+        productId: '2',
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString()
+      },
+      {
+        id: '4',
+        imageUrl: '/images/pearl-necklace-2.jpg',
+        publicId: 'pearl-necklace-2',
+        isDefault: false,
+        productId: '2',
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString()
+      }
+    ],
+    colors: [],
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString()
+  },
+  {
+    id: '3',
+    name: 'Sapphire Earrings',
+    description: 'Stunning sapphire and diamond drop earrings set in white gold.',
+    price: 1299,
+    stock: 8,
+    categories: [
+      {
+        id: '3',
+        name: 'Earrings',
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString()
+      }
+    ],
+    images: [
+      {
+        id: '5',
+        imageUrl: '/images/sapphire-earrings-1.jpg',
+        publicId: 'sapphire-earrings-1',
+        isDefault: true,
+        productId: '3',
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString()
+      },
+      {
+        id: '6',
+        imageUrl: '/images/sapphire-earrings-2.jpg',
+        publicId: 'sapphire-earrings-2',
+        isDefault: false,
+        productId: '3',
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString()
+      }
+    ],
+    colors: [],
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString()
+  },
+ 
+];
 
 const initialState: ProductsState = {
   items: [],
@@ -45,89 +137,12 @@ const initialState: ProductsState = {
   error: null
 };
 
-// Mock data
-const mockProducts: Product[] = [
-  {
-    id: '1',
-    name: 'Diamond Eternity Ring',
-    description: 'Exquisite diamond ring featuring 24 round brilliant diamonds in a classic setting.',
-    price: 2499,
-    category: 'Rings',
-    images: ['/images/diamond-ring-1.jpg', '/images/diamond-ring-2.jpg'],
-    featured: true,
-    rating: 4.9
-  },
-  {
-    id: '2',
-    name: 'Pearl Necklace',
-    description: 'Elegant freshwater pearl necklace with 18K gold clasp.',
-    price: 899,
-    category: 'Necklaces',
-    images: ['/images/pearl-necklace-1.jpg', '/images/pearl-necklace-2.jpg'],
-    featured: true,
-    rating: 4.7
-  },
-  {
-    id: '3',
-    name: 'Sapphire Earrings',
-    description: 'Stunning sapphire and diamond drop earrings set in white gold.',
-    price: 1299,
-    category: 'Earrings',
-    images: ['/images/sapphire-earrings-1.jpg', '/images/sapphire-earrings-2.jpg'],
-    new: true,
-    rating: 4.8
-  },
-  {
-    id: '4',
-    name: 'Gold Chain Bracelet',
-    description: 'Classic 18K gold chain bracelet with lobster clasp.',
-    price: 799,
-    category: 'Bracelets',
-    images: ['/images/gold-bracelet-1.jpg', '/images/gold-bracelet-2.jpg'],
-    new: true,
-    rating: 4.6
-  },
-  {
-    id: '5',
-    name: 'Emerald Pendant',
-    description: 'Brilliant emerald pendant with diamond halo on 18K gold chain.',
-    price: 1499,
-    category: 'Necklaces',
-    images: ['/images/emerald-pendant-1.jpg', '/images/emerald-pendant-2.jpg'],
-    featured: true,
-    rating: 4.9
-  },
-  {
-    id: '6',
-    name: 'Ruby Cocktail Ring',
-    description: 'Bold ruby cocktail ring surrounded by diamonds in rose gold setting.',
-    price: 1899,
-    category: 'Rings',
-    images: ['/images/ruby-ring-1.jpg', '/images/ruby-ring-2.jpg'],
-    new: true,
-    rating: 4.7
-  },
-  {
-    id: '7',
-    name: 'Diamond Tennis Bracelet',
-    description: 'Classic diamond tennis bracelet featuring 3ct of round brilliant diamonds.',
-    price: 3699,
-    category: 'Bracelets',
-    images: ['/images/tennis-bracelet-1.jpg', '/images/tennis-bracelet-2.jpg'],
-    featured: true,
-    rating: 5.0
-  },
-  {
-    id: '8',
-    name: 'Gold Hoop Earrings',
-    description: 'Elegant 14K gold hoop earrings, perfect for everyday wear.',
-    price: 499,
-    category: 'Earrings',
-    images: ['/images/hoop-earrings-1.jpg', '/images/hoop-earrings-2.jpg'],
-    new: true,
-    rating: 4.5
+export const fetchProducts = createAsyncThunk(
+  'products/fetchProducts',
+  async () => {
+    return mockProducts;
   }
-];
+);
 
 const productsSlice = createSlice({
   name: 'products',
@@ -141,13 +156,31 @@ const productsSlice = createSlice({
       .addCase(fetchProducts.fulfilled, (state, action: PayloadAction<Product[]>) => {
         state.status = 'succeeded';
         state.items = action.payload;
-        state.featuredItems = action.payload.filter(product => product.featured);
-        state.newArrivals = action.payload.filter(product => product.new);
+        
+        // Since we no longer have featured/new flags, let's use creation date
+        const now = new Date();
+        const thirtyDaysAgo = new Date(now.setDate(now.getDate() - 30));
+        
+        // Get latest products as featured items
+        state.featuredItems = action.payload
+          .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
+          .slice(0, 4);
+        
+        // Get products created in the last 30 days as new arrivals
+        state.newArrivals = action.payload
+          .filter(product => new Date(product.createdAt) > thirtyDaysAgo)
+          .slice(0, 4);
         
         // Extract unique categories
-        const categories = new Set<string>();
-        action.payload.forEach(product => categories.add(product.category));
-        state.categories = Array.from(categories);
+        const uniqueCategories = new Map<string, Category>();
+        action.payload.forEach(product => {
+          product.categories.forEach(category => {
+            if (!uniqueCategories.has(category.id)) {
+              uniqueCategories.set(category.id, category);
+            }
+          });
+        });
+        state.categories = Array.from(uniqueCategories.values());
       })
       .addCase(fetchProducts.rejected, (state, action) => {
         state.status = 'failed';

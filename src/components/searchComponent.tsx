@@ -1,17 +1,32 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { IndianRupee, Loader2 } from 'lucide-react';
 import { useSearchProductsQuery } from '../store/services/productsApi';
 
 interface SearchResultsProps {
   searchTerm: string;
   onClose: () => void;
+  onSearch: (term: string) => void;
 }
 
-export const SearchResults: React.FC<SearchResultsProps> = ({ searchTerm, onClose }) => {
+export const SearchResults: React.FC<SearchResultsProps> = ({ 
+  searchTerm, 
+  onClose,
+  onSearch 
+}) => {
+  const navigate = useNavigate();
   const { data, isLoading } = useSearchProductsQuery(searchTerm, {
     skip: searchTerm.length < 2,
   });
+
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter' && searchTerm.length >= 2) {
+      e.preventDefault();
+      onSearch(searchTerm);
+      navigate(`/search?q=${encodeURIComponent(searchTerm)}`);
+      onClose();
+    }
+  };
 
   if (!searchTerm || searchTerm.length < 2) {
     return (
@@ -38,9 +53,9 @@ export const SearchResults: React.FC<SearchResultsProps> = ({ searchTerm, onClos
   }
 
   return (
-    <div className="max-h-[60vh] overflow-y-auto">
+    <div className="max-h-[60vh] overflow-y-auto" onKeyDown={handleKeyDown}>
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 p-4">
-        {data.data.map((product) => (
+        {data?.data?.map((product) => (
           <Link
             key={product.id}
             to={`/product/${product.id}`}

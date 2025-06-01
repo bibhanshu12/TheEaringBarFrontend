@@ -42,7 +42,7 @@ const Navbar = () => {
     }
   };
 
-  // Update the search input in both desktop and mobile views
+  // Update the searchInput constant to include onSearch prop
   const searchInput = (
     <form onSubmit={handleSearchSubmit} className="relative">
       <input 
@@ -64,11 +64,16 @@ const Navbar = () => {
       {isSearchOpen && searchTerm && !isMobileMenuOpen && (
         <div className="absolute top-full left-0 w-full bg-white shadow-lg rounded-b-lg mt-1 z-50">
           <SearchResults 
-            searchTerm={debouncedSearchTerm} 
+            searchTerm={debouncedSearchTerm}
+            onSearch={(term) => {
+              navigate(`/search?q=${encodeURIComponent(term)}`);
+              setIsSearchOpen(false);
+              setSearchTerm('');
+            }}
             onClose={() => {
               setIsSearchOpen(false);
               setSearchTerm('');
-            }} 
+            }}
           />
         </div>
       )}
@@ -148,12 +153,12 @@ const Navbar = () => {
           <Link to="/fresh-drops" className="text-gold-antique hover:text-gold-bronze font-medium transition-colors">
             Fresh Drops
           </Link>
-          <Link to="/gift-boxes" className="text-gold-antique hover:text-gold-bronze font-medium transition-colors">
+          {/* <Link to="/gift-boxes" className="text-gold-antique hover:text-gold-bronze font-medium transition-colors">
             Gift Boxes
-          </Link>
-          <Link to="/couple-sets" className="text-gold-antique hover:text-gold-bronze font-medium transition-colors">
+          </Link> */}
+          {/* <Link to="/couple-sets" className="text-gold-antique hover:text-gold-bronze font-medium transition-colors">
             Couple Sets
-          </Link>
+          </Link> */}
         </nav>
 
         {/* Mobile Menu Button - Only visible on mobile */}

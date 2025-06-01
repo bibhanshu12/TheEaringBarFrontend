@@ -6,8 +6,9 @@ export interface CartItem {
   price: number;
   image: string;
   quantity: number;
+  stock: number;
   colorId?: string;
-  availableStock: number;
+  // Remove availableStock since we're using stock from the product
 }
 
 interface CartState {
@@ -34,7 +35,7 @@ const cartSlice = createSlice({
 
       if (existingItem) {
         const newQuantity = existingItem.quantity + action.payload.quantity;
-        if (newQuantity <= action.payload.availableStock) {
+        if (newQuantity <= action.payload.stock) {
           existingItem.quantity = newQuantity;
         }
       } else {

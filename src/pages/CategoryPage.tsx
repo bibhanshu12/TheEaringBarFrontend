@@ -72,10 +72,8 @@ const CategoryPage = () => {
     }
   );
 
-  // Use the category name from the passed state, or fall back to finding it in products
-  const categoryName = selectedCategory?.name || productsData?.data?.[0]?.categories?.find(
-    cat => cat.categoryId.toString() === categoryId
-  )?.category?.name || 'Products';
+  // Update the category name extraction logic
+  const categoryName = selectedCategory?.name || productsData?.data?.[0]?.categories?.[0]?.name || 'Products';
 
   return (
     <div className="min-h-screen flex flex-col">

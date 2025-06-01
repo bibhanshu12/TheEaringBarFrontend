@@ -28,57 +28,57 @@ export interface ProductColor {
     onCancel: () => void;
   }
   
-  export interface Offer {
-    id: string;
-    code: string;
-    title: string;
-    description: string;
-    discountValue: number;
-    discountType: 'PERCENTAGE' | 'FIXED';
-    minOrder: number;
-    maxDiscount: number;
-    startDate: string;
-    endDate: string;
-    useCount: number;
-    usageLimit: number;
-    status: OfferStatus;
-    visibility: 'PUBLIC' | 'PRIVATE';
-    createdAt: string;
-    updatedAt: string;
-    products?: Product[];
-  }
+  // export interface Offer {
+  //   id: string;
+  //   code: string;
+  //   title: string;
+  //   description: string;
+  //   discountValue: number;
+  //   discountType: 'PERCENTAGE' | 'FIXED';
+  //   minOrder: number;
+  //   maxDiscount: number;
+  //   startDate: string;
+  //   endDate: string;
+  //   useCount: number;
+  //   usageLimit: number;
+  //   status: OfferStatus;
+  //   visibility: 'PUBLIC' | 'PRIVATE';
+  //   createdAt: string;
+  //   updatedAt: string;
+  //   products?: Product[];
+  // }
   
   
-  export interface Product {
-    id: string;
-    name: string;
-    description: string;
-    price: number;
-    stock: number;
-    colors?: ProductColor[];
-    images: Array<{
-      id: string;
-      imageUrl: string;
-      publicId: string;
-      isDefault: boolean;
-    }>;
-    categories: Array<{
-      id: string;
-      categoryId: number;
-      category?: {
-        id: number;
-        name: string;
-      };
-    }>;
-    offers?: Array<{
-      id: string;
-      code: string;
-      discountType: 'FIXED' | 'PERCENTAGE';
-      discountValue: number;
-    }>;
-    createdAt: string;
-    updatedAt: string;
-  }
+  // export interface Product {
+  //   id: string;
+  //   name: string;
+  //   description: string;
+  //   price: number;
+  //   stock: number;
+  //   colors?: ProductColor[];
+  //   images: Array<{
+  //     id: string;
+  //     imageUrl: string;
+  //     publicId: string;
+  //     isDefault: boolean;
+  //   }>;
+  //   categories: Array<{
+  //     id: string;
+  //     categoryId: number;
+  //     category?: {
+  //       id: number;
+  //       name: string;
+  //     };
+  //   }>;
+  //   offers?: Array<{
+  //     id: string;
+  //     code: string;
+  //     discountType: 'FIXED' | 'PERCENTAGE';
+  //     discountValue: number;
+  //   }>;
+  //   createdAt: string;
+  //   updatedAt: string;
+  // }
   
   export interface OfferWithProducts extends Offer {
     products?: Product[];
@@ -118,6 +118,30 @@ export interface ProductColor {
     hexCode: string;
   }
   
+  // Address Types
+export interface Address {
+  id: string;
+  userId: string;
+  street: string;
+  zipCode: string;
+  city: string;
+  country: string;
+  label?: string;
+  state: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface AddressFormData {
+  userId: string;
+  street: string;
+  zipCode: string;
+  city: string;
+  country: string;
+  label?: string;
+  state: string;
+}
+
   // Offer Types
   export type OfferStatus = 'ACTIVE' | 'ARCHIVED' | 'EXPIRED' | 'INACTIVE';
   export type OfferVisibility = 'PUBLIC' | 'PRIVATE';
@@ -184,10 +208,83 @@ export interface ProductColor {
     status: OfferStatus;
   }
   
+
+  export interface Product {
+  id: string;
+  name: string;
+  description?: string;
+  stock: number;
+  price: number;
+  categories: Category[];         // Many-to-many relation
+  images: ProductImage[];         // Relation to ProductImage model
+  colors: ProductColor[];         // Variants with stock and color info
+  offers?: Offer[];               // Optional many-to-many offers
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface ProductImage {
+  id: string;
+  imageUrl: string;
+  publicId: string;
+  isDefault: boolean;
+  productId: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface ProductColor {
+  id: string;
+  productId: string;
+  colorId: string;
+  stock: number;
+  createdAt: string;
+  updatedAt: string;
+  color?: Color;
+}
+
+export interface Color {
+  id: string;
+  name: string;
+  hexCode: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface Category {
+  id: string;
+  name: string;
+  description?: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface Offer {
+  id: string;
+  code: string;
+  title: string;
+  description?: string;
+  discountValue: number;
+  discountType: 'FIXED' | 'PERCENTAGE';
+  minOrder?: number;
+  maxDiscount?: number;
+  startDate: string;
+  endDate: string;
+  useCount: number;
+  usageLimit?: number;
+  status: 'ACTIVE' | 'DRAFT' | 'EXPIRED' | 'ARCHIVED';
+  visibility: 'PUBLIC' | 'PRIVATE' | 'ROLE_BASED';
+  createdAt: string;
+  updatedAt: string;
+}
+
   export interface ApiError {
+    status?: number;
     data?: {
+      success: boolean;
       message: string;
     };
+    error?: string;
   }
   
   // API Response Types
@@ -212,6 +309,7 @@ export interface ProductColor {
     firstName: string;
     lastName: string;
     role: string;
+    token:string;
   }
   
   export interface LoginResponse {
@@ -224,5 +322,4 @@ export interface ProductColor {
     email: string;
     password: string;
   }
-  
-  
+

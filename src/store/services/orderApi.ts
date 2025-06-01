@@ -28,7 +28,7 @@ export interface Order {
 export const orderApi = createApi({
   reducerPath: "orderApi",
   baseQuery: baseQueryWithReauth,
-  tagTypes: ["Order"],
+  tagTypes: ["Order","Cart"],
   endpoints: (builder) => ({
     getOrders: builder.query<{ success: boolean; orders: Order[] }, void>({
       query: () => ({
@@ -73,15 +73,41 @@ export const orderApi = createApi({
         body,
       }),
     }),
-    mailOrder: builder.mutation<
-      { success: boolean; message: string },
-      { addressId: string; orderId: string }
-    >({
+    placeOrderAndMail: builder.mutation<{
+      success: boolean;
+      order: {
+        id: string;
+        userId: string;
+        totalAmount: number;
+        finalAmount: number;
+        status: Order['status'];
+        placedAt: string;
+        items: Array<{
+          product: {
+            id: string;
+            name: string;
+            price: number;
+            remainingStock: number;
+          };
+          color: string | null;
+          quantity: number;
+          price: number;
+        }>;
+      };
+      upgradeProducts: Array<{
+        id: string;
+        name: string;
+        description: string;
+        price: number;
+        stock: number;
+      }>;
+    }, { addressId: string }>({
       query: (body) => ({
         url: '/api/order/mailorder',
         method: 'POST',
         body,
       }),
+      invalidatesTags: ['Order', 'Cart'],
     }),
   }),
 });
@@ -92,5 +118,5 @@ export const {
   useDeleteOrderMutation,
   useUpdateOrderStatusMutation,
   useDoNewsLetterMailMutation,
-  useMailOrderMutation,
+  usePlaceOrderAndMailMutation,
 } = orderApi;

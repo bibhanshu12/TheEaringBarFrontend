@@ -5,7 +5,7 @@ import {
   OfferFormData,
   PaginatedResponse,
   ApiResponse
-} from '../../models/types';
+} from '../../models/type';
 import { baseQueryWithReauth } from './baseQuery';
 export const offersApi = createApi({
   reducerPath: 'offersApi',

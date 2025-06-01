@@ -2,13 +2,32 @@
 import { createApi } from '@reduxjs/toolkit/query/react';
 import { baseQueryWithReauth } from './baseQuery';
 import { setCredentials, logout as logoutAction } from '../authSlice';
-import { LoginResponse } from '../../models/type';
+import { User } from '../../models/type';
 
+// Define interfaces for API responses
+interface AuthResponse {
+  success: boolean;
+  msg: string;
+  user: User;
+  token: string;
+}
+
+interface MessageResponse {
+  success: boolean;
+  message: string;
+}
+
+// Request interfaces
 interface SignUpRequest {
   email: string;
   password: string;
   firstName: string;
   lastName: string;
+}
+
+interface LoginRequest {
+  email: string;
+  password: string;
 }
 
 interface ForgotPasswordRequest {
@@ -24,7 +43,7 @@ export const authApi = createApi({
   reducerPath: 'authApi',
   baseQuery: baseQueryWithReauth,
   endpoints: (builder) => ({
-    signup: builder.mutation<LoginResponse, SignUpRequest>({
+    signup: builder.mutation<AuthResponse, SignUpRequest>({
       query: (credentials) => ({
         url: '/api/signup',
         method: 'POST',
@@ -33,8 +52,11 @@ export const authApi = createApi({
       async onQueryStarted(_, { dispatch, queryFulfilled }) {
         try {
           const { data } = await queryFulfilled;
-          if (data.msg === "Signup Successful!" && data.user) {
-            dispatch(setCredentials({ user: data.user }));
+          if (data.success && data.user) {
+            dispatch(setCredentials({ 
+              user: data.user,
+              token: data.token 
+            }));
           }
         } catch (error) {
           console.error('Signup error:', error);
@@ -42,7 +64,7 @@ export const authApi = createApi({
       },
     }),
 
-    login: builder.mutation<LoginResponse, { email: string; password: string }>({
+    login: builder.mutation<AuthResponse, LoginRequest>({
       query: (credentials) => ({
         url: '/api/signin',
         method: 'POST',
@@ -51,8 +73,11 @@ export const authApi = createApi({
       async onQueryStarted(_, { dispatch, queryFulfilled }) {
         try {
           const { data } = await queryFulfilled;
-          if (data.msg === "LoggedIn Successful!" && data.user) {
-            dispatch(setCredentials({ user: data.user }));
+          if (data.success && data.user) {
+            dispatch(setCredentials({ 
+              user: data.user,
+              token: data.token 
+            }));
           }
         } catch (error) {
           console.error('Login error:', error);
@@ -60,7 +85,7 @@ export const authApi = createApi({
       },
     }),
 
-    logout: builder.mutation<void, void>({
+    logout: builder.mutation<MessageResponse, void>({
       query: () => ({
         url: '/api/signout',
         method: 'POST',
@@ -70,7 +95,7 @@ export const authApi = createApi({
       },
     }),
 
-    forgotPassword: builder.mutation<{ message: string }, ForgotPasswordRequest>({
+    forgotPassword: builder.mutation<MessageResponse, ForgotPasswordRequest>({
       query: (body) => ({
         url: '/api/user/forgotpassword',
         method: 'POST',
@@ -78,7 +103,7 @@ export const authApi = createApi({
       }),
     }),
 
-    verifyCode: builder.mutation<{ message: string }, VerifyCodeRequest>({
+    verifyCode: builder.mutation<MessageResponse, VerifyCodeRequest>({
       query: (body) => ({
         url: '/api/user/verifyCode',
         method: 'POST',
