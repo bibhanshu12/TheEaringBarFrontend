@@ -98,7 +98,7 @@ const Navbar = () => {
           {/* Center - Logo */}
           <div className="flex-2 flex justify-center">
             <Link to="/" className="flex items-center">
-              <h1 className="text-2xl font-bold gold-gradient-text">THE EARING BAR</h1>
+              <h1 className="text-2xl font-bold gold-gradient-text">THE EARRING BAR</h1>
             </Link>
           </div>
 

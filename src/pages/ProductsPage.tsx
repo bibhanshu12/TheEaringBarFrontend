@@ -22,7 +22,7 @@ const ProductsPage = () => {
     const fetchProducts = async () => {
       try {
         setIsLoading(true);
-        const response = await axios.get<ProductResponse>(import.meta.env.VITE_API_BASE_URL);
+        const response = await axios.get<ProductResponse>(import.meta.env.VITE_API_BASE_URL+"/api/allproducts");
         
         // Transform the response data to match the Product interface
         const transformedProducts: Product[] = response.data.data.map(product => ({

@@ -22,6 +22,8 @@ import CareInstructions from "./components/footerElements/CareInstructions";
 import FAQ from "./components/footerElements/FAQ";
 import Warranty from "./components/footerElements/Warranty";
 import SizingGuide from "./components/footerElements/Sizing";
+import Return from "./components/footerElements/Return";
+import FreshDropsPage from "./pages/FreshDropsPage";
 
 const queryClient = new QueryClient();
 
@@ -29,7 +31,11 @@ const ScrollToTop = () => {
   const { pathname } = useLocation();
 
   useEffect(() => {
-    window.scrollTo(0, 0);
+    window.scrollTo({
+      top: 0,
+      left: 0,
+      behavior: 'smooth' // Add smooth scrolling
+    });
   }, [pathname]);
 
   return null;
@@ -52,11 +58,13 @@ const App = () => (
             <Route path="/about" element={<About />} />
             <Route path="/orders" element={<OrdersPage />} />
             <Route path="/products" element={<AllProducts />} />
+            <Route path="/fresh-drops" element={<FreshDropsPage />} />
             <Route path="/care" element={<CareInstructions />} />
             <Route path="/faq" element={<FAQ />} />
             <Route path="/warranty" element={<Warranty />} />
             <Route path="/sizing" element={<SizingGuide />} />
             <Route path="/search" element={<SearchPage />} />
+            <Route path="/return-policy" element={<Return />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </BrowserRouter>

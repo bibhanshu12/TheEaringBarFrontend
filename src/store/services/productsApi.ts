@@ -158,6 +158,16 @@ export const productsApi = createApi({
       }),
       providesTags: ['Products'],
     }),
+    getFreshDrops: builder.query<ApiResponse<Product[]>, void>({
+      query: () => '/api/freshdrops',
+      providesTags: (result) =>
+        result
+          ? [
+              ...result.data.map(({ id }) => ({ type: 'Products' as const, id })),
+              { type: 'Products', id: 'FRESH_DROPS' },
+            ]
+          : [{ type: 'Products', id: 'FRESH_DROPS' }],
+    }),
   }),
 });
 
@@ -172,4 +182,5 @@ export const {
   useAssignOfferToProductMutation,
   useGetProductsByIdsQuery,
   useSearchProductsQuery,
+  useGetFreshDropsQuery,
 } = productsApi;
