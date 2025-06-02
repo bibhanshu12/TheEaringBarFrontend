@@ -108,15 +108,29 @@ const Navbar = () => {
             <h1 className="text-2xl font-bold gold-gradient-text">THE EARRING BAR</h1>
           </Link>
 
-          {/* Right - Cart */}
-          <Link to="/cart" className="text-gold-antique hover:text-gold-bronze transition-colors relative">
-            <ShoppingCart size={24} />
-            {cartItemsCount > 0 && (
-              <span className="absolute -top-2 -right-2 bg-gold-standard text-black text-xs w-5 h-5 rounded-full flex items-center justify-center font-bold">
-                {cartItemsCount}
-              </span>
-            )}
-          </Link>
+
+
+          {/* Right - Orders & Cart */}
+          <div className="flex items-center space-x-4">
+            {/* Orders - Desktop Only */}
+            <Link 
+              to="/orders" 
+              className="hidden md:flex items-center text-gold-antique hover:text-gold-bronze transition-colors"
+            >
+              <Package size={24} className="mr-1" />
+              {/* <span className="font-medium">Orders</span> */}
+            </Link>
+            
+            {/* Cart */}
+            <Link to="/cart" className="text-gold-antique hover:text-gold-bronze transition-colors relative">
+              <ShoppingCart size={24} />
+              {cartItemsCount > 0 && (
+                <span className="absolute -top-2 -right-2 bg-gold-standard text-black text-xs w-5 h-5 rounded-full flex items-center justify-center font-bold">
+                  {cartItemsCount}
+                </span>
+              )}
+            </Link>
+          </div>
         </div>
 
         {/* Desktop Navigation - Hidden on Mobile */}
@@ -151,12 +165,7 @@ const Navbar = () => {
           <Link to="/fresh-drops" className="text-gold-antique hover:text-gold-bronze font-medium transition-colors">
             Fresh Drops
           </Link>
-          {/* <Link to="/gift-boxes" className="text-gold-antique hover:text-gold-bronze font-medium transition-colors">
-            Gift Boxes
-          </Link> */}
-          {/* <Link to="/couple-sets" className="text-gold-antique hover:text-gold-bronze font-medium transition-colors">
-            Couple Sets
-          </Link> */}
+          {/* Remove Orders link from here since it's now in the top bar */}
         </nav>
 
         {/* Search Overlay */}
@@ -236,6 +245,16 @@ const Navbar = () => {
                   Fresh Drops
                 </Link>
                 <Link 
+                  to="/orders" 
+                  className="py-3 border-b border-gold-antique/10 text-gold-antique hover:text-gold-bronze"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                >
+                  <span className="flex items-center">
+                    <Package size={20} className="mr-2" />
+                    Orders
+                  </span>
+                </Link>
+                {/* <Link 
                   to="/gift-boxes" 
                   className="py-3 border-b border-gold-antique/10 text-gold-antique hover:text-gold-bronze"
                   onClick={() => setIsMobileMenuOpen(false)}
@@ -248,7 +267,7 @@ const Navbar = () => {
                   onClick={() => setIsMobileMenuOpen(false)}
                 >
                   Couple Sets
-                </Link>
+                </Link> */}
 
                 {/* Cart Link for Mobile */}
                 <Link 
