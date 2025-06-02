@@ -4,15 +4,15 @@ import { useAppDispatch } from '../store/hooks';
 import { useNavigate } from 'react-router-dom';
 import { useGetProductsByCategoryQuery } from '../store/services/categoriesApi';
 
-import Navbar from '../components/Navbar';
+// import Navbar from '../components/Navbar';
 import HeroSlider from '../components/HeroSlider';
 import CategorySection from '../components/CategorySection';
 import FeaturedProducts from '../components/FeaturedProducts';
 import TestimonialsSection from '../components/TestimonialsSection';
 import NewsletterSection from '../components/NewsletterSection';
-import Footer from '../components/Footer';
+// import Footer from '../components/Footer';
 import FeaturedCategories from '../components/FeaturedCategories';
-import BottomNav from '../components/BottomNav';
+// import BottomNav from '../components/BottomNav';
 
 const Index = () => {
   const dispatch = useAppDispatch();
@@ -48,45 +48,36 @@ const Index = () => {
   };
 
   return (
-    <div className="min-h-screen flex flex-col pb-16 md:pb-0"> {/* Add padding for bottom nav */}
-      <Navbar />
-      <main className="flex-grow">
-        {/* Hero Section */}
-        <section className="relative">
-          <HeroSlider />
-        </section>
+    <>
+      <section className="relative">
+        <HeroSlider />
+      </section>
 
-        {/* Content Sections with proper spacing */}
-        <div className="mt-16 space-y-16"> {/* Start content after hero */}
-          <CategorySection />
-          
-          <div className="pt-8">
-            <FeaturedCategories
-              title="Latest Collections"
-              subtitle="Explore our newest arrivals"
-              products={latestProducts?.data || []}
-              isLoading={isLatestLoading}
-              // error={latestError?.message}
-            />
-          </div>
-
-          <div className="pt-4">
-            <FeaturedCategories
-              title="Customer Favourites"
-              subtitle="Our most loved pieces"
-              products={favouriteProducts?.data || []}
-              isLoading={isFavouriteLoading}
-              
-            />
-          </div>
-
-          <TestimonialsSection />
-          <NewsletterSection />
+      <div className="mt-16 space-y-16">
+        <CategorySection />
+        
+        <div className="pt-8">
+          <FeaturedCategories
+            title="Latest Collections"
+            subtitle="Explore our newest arrivals"
+            products={latestProducts?.data || []}
+            isLoading={isLatestLoading}
+          />
         </div>
-      </main>
-      <Footer />
-      <BottomNav /> {/* Add BottomNav component */}
-    </div>
+
+        <div className="pt-4">
+          <FeaturedCategories
+            title="Customer Favourites"
+            subtitle="Our most loved pieces"
+            products={favouriteProducts?.data || []}
+            isLoading={isFavouriteLoading}
+          />
+        </div>
+
+        <TestimonialsSection />
+        <NewsletterSection />
+      </div>
+    </>
   );
 };
 

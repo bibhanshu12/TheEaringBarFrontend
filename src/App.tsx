@@ -24,6 +24,7 @@ import Warranty from "./components/footerElements/Warranty";
 import SizingGuide from "./components/footerElements/Sizing";
 import Return from "./components/footerElements/Return";
 import FreshDropsPage from "./pages/FreshDropsPage";
+import Layout from "./components/Layout";
 
 const queryClient = new QueryClient();
 
@@ -49,24 +50,26 @@ const App = () => (
         <Sonner />
         <BrowserRouter>
           <ScrollToTop />
-          <Routes>
-            <Route path="/" element={<Index />} />
-            <Route path="/products" element={<ProductsPage />} />
-            <Route path="/product/:id" element={<ProductDetail />} />
-            <Route path="/category/:categoryId" element={<CategoryPage />} />
-            <Route path="/cart" element={<CartPage />} />
-            <Route path="/about" element={<About />} />
-            <Route path="/orders" element={<OrdersPage />} />
-            <Route path="/products" element={<AllProducts />} />
-            <Route path="/fresh-drops" element={<FreshDropsPage />} />
-            <Route path="/care" element={<CareInstructions />} />
-            <Route path="/faq" element={<FAQ />} />
-            <Route path="/warranty" element={<Warranty />} />
-            <Route path="/sizing" element={<SizingGuide />} />
-            <Route path="/search" element={<SearchPage />} />
-            <Route path="/return-policy" element={<Return />} />
-            <Route path="*" element={<NotFound />} />
-          </Routes>
+          <Layout>
+            <Routes>
+              <Route path="/" element={<Index />} />
+              <Route path="/products" element={<ProductsPage />} />
+              <Route path="/product/:id" element={<ProductDetail />} />
+              <Route path="/category/:categoryId" element={<CategoryPage />} />
+              <Route path="/cart" element={<CartPage />} />
+              <Route path="/about" element={<About />} />
+              <Route path="/orders" element={<OrdersPage />} />
+              <Route path="/products" element={<AllProducts />} />
+              <Route path="/fresh-drops" element={<FreshDropsPage />} />
+              <Route path="/care" element={<CareInstructions />} />
+              <Route path="/faq" element={<FAQ />} />
+              <Route path="/warranty" element={<Warranty />} />
+              <Route path="/sizing" element={<SizingGuide />} />
+              <Route path="/search" element={<SearchPage />} />
+              <Route path="/return-policy" element={<Return />} />
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+          </Layout>
         </BrowserRouter>
       </TooltipProvider>
     </QueryClientProvider>

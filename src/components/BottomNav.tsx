@@ -16,7 +16,19 @@ const BottomNav = () => {
           }`}
         >
           <ShoppingBag size={24} />
-          <span className="text-xs mt-1">All Jewellery</span>
+          <span className="text-xs mt-1">Products</span>
+        </Link>
+
+        <Link 
+          to="/fresh-drops" 
+          className={`flex flex-col items-center p-2 ${
+            location.pathname === '/fresh-drops' 
+              ? 'text-gold-bronze' 
+              : 'text-gold-antique'
+          }`}
+        >
+          <Sparkles size={24} />
+          <span className="text-xs mt-1">Fresh Drops</span>
         </Link>
 
         <Link 
@@ -31,17 +43,6 @@ const BottomNav = () => {
           <span className="text-xs mt-1">Orders</span>
         </Link>
 
-        <Link 
-          to="/fresh-drops" 
-          className={`flex flex-col items-center p-2 ${
-            location.pathname === '/fresh-drops' 
-              ? 'text-gold-bronze' 
-              : 'text-gold-antique'
-          }`}
-        >
-          <Sparkles size={24} />
-          <span className="text-xs mt-1">Fresh Drops</span>
-        </Link>
       </div>
     </div>
   );
