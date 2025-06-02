@@ -12,6 +12,7 @@ import TestimonialsSection from '../components/TestimonialsSection';
 import NewsletterSection from '../components/NewsletterSection';
 import Footer from '../components/Footer';
 import FeaturedCategories from '../components/FeaturedCategories';
+import BottomNav from '../components/BottomNav';
 
 const Index = () => {
   const dispatch = useAppDispatch();
@@ -47,7 +48,7 @@ const Index = () => {
   };
 
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="min-h-screen flex flex-col pb-16 md:pb-0"> {/* Add padding for bottom nav */}
       <Navbar />
       <main className="flex-grow">
         {/* Hero Section */}
@@ -84,6 +85,7 @@ const Index = () => {
         </div>
       </main>
       <Footer />
+      <BottomNav /> {/* Add BottomNav component */}
     </div>
   );
 };

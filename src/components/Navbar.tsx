@@ -81,47 +81,45 @@ const Navbar = () => {
   );
 
   return (
-    <header className={`fixed top-0 left-0 w-full z-40 transition-all duration-300 ${isScrolled ? 'bg-white shadow-md py-2' : 'bg-transparent  '}`}>
+    <header className={`fixed top-0 left-0 w-full z-40 transition-all duration-300 ${
+      isScrolled ? 'bg-white shadow-md py-2' : 'bg-transparent'
+    }`}>
       <div className="container-custom">
-        {/* Top Bar */}
-        <div className="flex items-center justify-between mb-4">
-          {/* Left - Search Icon */}
-          <div className="flex-1 flex pt-5 justify-start">
+        {/* Top Bar - Mobile & Desktop */}
+        <div className="flex items-center justify-between py-4">
+          {/* Left - Menu/Search */}
+          <div className="flex items-center space-x-4">
+            <button 
+              className="text-gold-antique md:hidden"
+              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+            >
+              {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
+            </button>
             <button 
               onClick={() => setIsSearchOpen(!isSearchOpen)}
               className="text-gold-antique hover:text-gold-bronze transition-colors"
             >
-              <Search size={30} />
+              <Search size={24} />
             </button>
           </div>
 
           {/* Center - Logo */}
-          <div className="flex-2 flex justify-center">
-            <Link to="/" className="flex items-center">
-              <h1 className="text-2xl font-bold gold-gradient-text">THE EARRING BAR</h1>
-            </Link>
-          </div>
+          <Link to="/" className="flex items-center">
+            <h1 className="text-2xl font-bold gold-gradient-text">THE EARRING BAR</h1>
+          </Link>
 
-          {/* Right - Cart and Orders */}
-          <div className="flex-1 flex justify-end items-center space-x-4">
-            <Link 
-              to="/orders" 
-              className="text-gold-antique hover:text-gold-bronze transition-colors"
-            >
-              <Package size={24} />
-            </Link>
-            <Link to="/cart" className="text-gold-antique hover:text-gold-bronze transition-colors relative">
-              <ShoppingCart size={24} />
-              {cartItemsCount > 0 && (
-                <span className="absolute -top-2 -right-2 bg-gold-standard text-black text-xs w-5 h-5 rounded-full flex items-center justify-center font-bold">
-                  {cartItemsCount}
-                </span>
-              )}
-            </Link>
-          </div>
+          {/* Right - Cart */}
+          <Link to="/cart" className="text-gold-antique hover:text-gold-bronze transition-colors relative">
+            <ShoppingCart size={24} />
+            {cartItemsCount > 0 && (
+              <span className="absolute -top-2 -right-2 bg-gold-standard text-black text-xs w-5 h-5 rounded-full flex items-center justify-center font-bold">
+                {cartItemsCount}
+              </span>
+            )}
+          </Link>
         </div>
 
-        {/* Bottom Navigation */}
+        {/* Desktop Navigation - Hidden on Mobile */}
         <nav className="hidden md:flex items-center justify-center space-x-6 py-2">
           <Link to="/" className="text-gold-antique hover:text-gold-bronze font-medium transition-colors">
             Home
@@ -161,29 +159,16 @@ const Navbar = () => {
           </Link> */}
         </nav>
 
-        {/* Mobile Menu Button - Only visible on mobile */}
-        <button 
-          className="md:hidden absolute top-4 left-4 text-gold-antique"
-          onClick={() => {
-            setIsMobileMenuOpen(!isMobileMenuOpen);
-            if (!isMobileMenuOpen) {
-              setIsSearchOpen(false);
-            }
-          }}
-        >
-          {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
-        </button>
-
         {/* Search Overlay */}
         {isSearchOpen && (
-          <div className="absolute top-full left-0 w-full bg-white shadow-md p-4 z-30 animate-fade-in">
+          <div className="absolute top-full left-0 w-full bg-white shadow-md p-4 z-30">
             {searchInput}
           </div>
         )}
         
         {/* Mobile Menu Overlay */}
         {isMobileMenuOpen && (
-          <div className="md:hidden fixed inset-0 z-50 bg-white animate-fade-in overflow-y-auto">
+          <div className="md:hidden fixed inset-0 z-50 bg-white">
             <div className="container-custom py-6">
               {/* Mobile Header */}
               <div className="flex justify-between items-center mb-8">
